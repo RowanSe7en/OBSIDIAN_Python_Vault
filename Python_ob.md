@@ -1,5 +1,4 @@
-# Python Notes
-
+# Python
 ---
 
 ## Printing & Variables
@@ -1459,4 +1458,1465 @@ outer_function()
 **Output:**
 ```
 UnboundLocalError: cannot access local variable 'outer_var' where it is not associated with a value
+```
+
+---
+
+## Random Module
+
+In Python, the `random` module allows you to generate random data for various purposes. You can create random floating-point numbers between 0 and 1 or within a specified range (e.g., a to b), generate random integers within a given range, select random elements from a list or tuple, and even shuffle the elements of a sequence.
+
+```python
+import random
+
+# Generate a random floating-point number between 0 and 1
+print("Random float between 0 and 1:", random.random())
+
+# Generate a random floating-point number between a and b
+print("Random float between 10 and 20:", random.uniform(10, 20))
+
+# Generate a random integer between a and b (inclusive)
+print("Random integer between 1 and 100:", random.randint(1, 100))
+
+# Choose a random element from a list
+fruits = ["apple", "banana", "cherry", "date"]
+print("Random fruit:", random.choice(fruits))
+
+# Select a random sample of 3 elements from a list
+print("Random sample of 3 fruits:", random.sample(fruits, 3))
+
+# Shuffle elements in a list
+numbers = [1, 2, 3, 4, 5]
+random.shuffle(numbers)
+print("Shuffled numbers:", numbers)
+```
+
+**Output:**
+```
+Random float between 0 and 1: 0.32502099053747324
+Random float between 10 and 20: 14.446561731013915
+Random integer between 1 and 100: 75
+Random fruit: cherry
+Random sample of 3 fruits: ['date', 'cherry', 'banana']
+Shuffled numbers: [2, 1, 4, 5, 3]
+```
+
+---
+
+## 32 — Exception Handling
+
+Exception handling allows you to manage errors that might occur during code execution. By employing `try`, `except`, and `finally` blocks, you can prevent your program from crashing and provide informative feedback to users.
+
+- **`try` block** — Contains the code that might raise an exception.
+- **`except` block** — Handles specific exceptions raised within the `try` block. You can have multiple `except` blocks for different exception types or use a single generic `except` block to catch any exception.
+- You can manually raise an error using the `raise` keyword followed by the exception name.
+
+```python
+try:
+    x = int(input("Enter a number: "))
+    result = 10 / x
+
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+
+except ValueError:
+    print("Invalid input. Please enter a valid number.")
+
+except Exception as e:
+    print("Exception occurred:", e)
+
+else:
+    print(result)
+
+finally:
+    print("Exiting try-except block")
+```
+
+**Output (example — invalid input):**
+```
+Enter a number: g
+Invalid input. Please enter a valid number.
+Exiting try-except block
+```
+
+### Raise Example
+
+```python
+def check_age(age):
+    if age < 0:
+        raise ValueError("Age cannot be negative!")
+    elif age < 18:
+        raise PermissionError("You must be 18 or older to proceed.")
+    else:
+        return "Access granted."
+
+try:
+    print(check_age(-5))  # Raises ValueError
+
+except ValueError as ve:
+    print("ValueError:", ve)
+
+except PermissionError as pe:
+    print("PermissionError:", pe)
+```
+
+**Output:**
+```
+ValueError: Age cannot be negative!
+```
+
+### Exception Handling with a Loop
+
+```python
+number = input("Enter a number: ")
+
+while True:
+    try:
+        print(10 / int(number))
+
+    except ZeroDivisionError:
+        number = input("You can't divide by zero, enter a valid number: ")
+
+    except ValueError:
+        number = input("You should enter numbers only: ")
+
+    else:
+        break
+```
+
+**Output:**
+```
+Enter a number: @
+You can't divide by zero, enter a valid number: m
+You should enter numbers only: 2
+5.0
+```
+
+---
+
+## 33 — File Detection
+
+File detection in Python involves checking whether a file exists in the filesystem, verifying its attributes, and determining its type.
+
+Using the `os.path` or `pathlib` modules:
+- `exists()` — Check if a file exists.
+- `isfile()` / `isdir()` — Check if a path is a file or directory.
+- `os.stat()` — Get file attributes such as size, permissions, and modification time.
+
+```python
+import os
+
+the_path = "Example.txt"
+
+if os.path.exists(the_path):
+    print(f"The file \"{the_path}\" exists")
+
+print(f"Is the {the_path} a file?: {os.path.isfile(the_path)}")
+print(f"The size is: {os.stat(the_path).st_size} bytes")
+print(f"The file infos are: {os.stat(the_path)}")
+```
+
+**Output:**
+```
+The file "Example.txt" exists
+Is the Example.txt a file?: True
+The size is: 29 bytes
+The file infos are: os.stat_result(st_mode=33206, st_ino=..., st_size=29, ...)
+```
+
+### Using `pathlib`
+
+```python
+from pathlib import Path
+
+filename = Path("Example.txt")
+
+if filename.exists():
+    print(f"The file '{filename}' exists.")
+else:
+    print(f"The file '{filename}' does not exist.")
+```
+
+**Output:**
+```
+The file 'Example.txt' exists.
+```
+
+---
+
+## 34 — Read a File
+
+To read a file in Python, use the built-in `open()` function. The recommended way is the `with` statement — it ensures the file is automatically closed when the block exits, even if an exception occurs.
+
+### File Open Modes
+
+| Open Mode | Meaning |
+|-----------|---------|
+| `"r"` | Read (file must exist) |
+| `"w"` | Write (creates or overwrites) |
+| `"a"` | Append (adds to end) |
+| `"x"` | Create new file (error if exists) |
+| `"rb"` | Read binary |
+| `"wb"` | Write binary |
+
+```python
+# Example 1: Manual open/close
+file = open("Example.txt", 'r')
+print(file.read())
+file.close()
+
+# Example 2: Using with statement (recommended)
+try:
+    with open("Example.txt", "r") as file:
+        print(file.read())
+except:
+    print("The file doesn't exist")
+```
+
+**Output:**
+```
+Hello world!
+Hello world!
+```
+
+### Read Examples
+
+```python
+# 1) Read entire file
+with open("test.txt", "r") as f:
+    data = f.read()
+    print("Read entire file:")
+    print(data)
+
+# 2) Read line by line
+with open("test.txt", "r") as f:
+    print("\nRead line by line:")
+    for line in f:
+        print(line)
+        break
+
+# 3) Read only one line
+with open("test.txt", "r") as f:
+    line = f.readline()
+    print("\nFirst line only:")
+    print(line)
+
+# 4) Read all lines into list
+with open("test.txt", "r") as f:
+    lines = f.readlines()
+    print("\nLines list:")
+    print(lines)
+```
+
+---
+
+### `open()` — Notes
+
+- `open()` returns a file object that wraps the OS-level file descriptor and provides methods for reading, writing, and managing the file.
+- The file object buffers data; writes may not appear on disk until `.flush()` or `.close()` is called.
+- The object keeps a file descriptor open at the OS level. Not closing it can cause **resource leaks**.
+
+---
+
+### `close()` — Notes
+
+`close()` terminates access to a resource and releases the underlying system resources. When called on a file, it:
+- Flushes any buffered data to disk.
+- Invalidates the file descriptor at the OS level.
+- Marks the object as closed — further read/write operations will raise an exception.
+
+> Even though the file is closed, the Python object `f` still exists in memory with attributes like `.name`, `.mode`, `.encoding`, etc.
+
+#### Common Bad Usage Scenarios for `close()`
+
+1. **Exception before `close()`** — If `close()` is the last line in a `try` block and an exception is raised before it, the file stays open (resource leak).
+2. **`open()` fails before assignment** — If `open()` fails and `finally` tries to call `.close()` on an undefined variable, you get an `UnboundLocalError`.
+3. **Reference reassigned before closing** — If the file variable is reassigned to a new file before closing the original, the original handle is lost (resource leak).
+4. **Double close** — Closing in `try` and again in `finally` without state checking is poor resource management.
+
+```python
+# Bad usage examples
+file_name = "data.txt"
+try:
+    f = open(file_name, "w")
+    f.write("Important data\n")
+    result = 10 / 0  # Unexpected error — f.close() never reached
+    f.close()
+except Exception as e:
+    print(f"Error occurred: {e}")
+
+# ---
+
+file_name = "nonexistent_directory/data.txt"
+try:
+    f = open(file_name, "r")  # This fails
+    print(f.read())
+except Exception as e:
+    print(f"Original error: {e}")
+finally:
+    f.close()  # f was never assigned → UnboundLocalError
+
+# ---
+
+f = open("first.txt", "w")
+f.write("First file content\n")
+# Reassign before closing
+f = open("second.txt", "w")
+f.write("Second file content\n")
+f.close()
+
+# ---
+
+file_name = "data.txt"
+f = None
+try:
+    f = open(file_name, "w")
+    f.write("Some content\n")
+    f.close()  # First close
+except Exception as e:
+    print(f"Error: {e}")
+finally:
+    f.close()  # Second close — poor state management
+```
+
+#### The Correct Pattern
+
+```
+Initialize variable to None
+→ Open inside try
+→ Close in finally
+→ Guard with: if f is not None
+```
+
+This prevents: leaks, undefined variables, double-close errors, and descriptor exhaustion.
+
+---
+
+### The Context Manager Protocol (`with` statement)
+
+The `with` statement uses two special methods:
+- `__enter__()` — Called on entry; opens the file and returns the file object.
+- `__exit__()` — Called on exit (even if an exception occurred); closes the file and handles cleanup.
+
+**Three phases of `with open(...) as f:`:**
+1. **Enter phase** — `__enter__()` is called; file is opened; object assigned to `f`.
+2. **Execution phase** — Your code runs; exceptions are temporarily held.
+3. **Exit phase** — `__exit__()` is called automatically; file is closed; cleanup happens; exceptions are either suppressed or propagated.
+
+---
+
+## 35 — Write a File
+
+Use `open()` with mode `'w'` (overwrite) or `'a'` (append). Always use the `with` statement.
+
+```python
+# 1) Overwrite file
+with open("test.txt", "w") as f:
+    f.write("Hello world\n")
+
+# 2) Append to file
+with open("test.txt", "a") as f:
+    f.write("New line\n")
+
+# 3) Write multiple lines
+lines = ["Hello\n", "World\n"]
+with open("test.txt", "w") as f:
+    f.writelines(lines)
+```
+
+**Resulting file:**
+```
+Hello world
+New line
+Hello
+World
+```
+
+### Overwrite Example
+
+```python
+with open('Example.txt', 'w') as file:  # open the file in write mode
+    # Write or overwrite data to the file
+    file.write("Hello, world!!!\nThis is a test file.\n"
+               "Writing data to a file in Python.")
+```
+
+**File content:**
+```
+Hello, world!!!
+This is a test file.
+Writing data to a file in Python.
+```
+
+---
+
+## `seek()` and `tell()`
+
+`seek()` and `tell()` control and inspect the **file cursor** (file pointer) — the position index indicating where the next read/write will occur.
+
+- `tell()` — Returns the current cursor position ("Where am I?").
+- `seek(position)` — Moves the cursor to a specific byte offset from the start.
+- `seek(offset, whence)` — Advanced usage in binary mode:
+  - `0` = from beginning
+  - `1` = from current position
+  - `2` = from end of file
+
+```python
+with open("test.txt", "r") as f:
+    print("Start:", f.tell())
+    data = f.read(5)
+    print("Read:", data)
+    print("After read:", f.tell())
+    f.seek(0)
+    print("After seek:", f.tell())
+    print("Read again:", f.read(5))
+# Output:
+# Start: 0
+# Read: Hello
+# After read: 5
+# After seek: 0
+# Read again: Hello
+```
+
+### `seek()` with `whence` (binary mode)
+
+```python
+with open("test.txt", "rb") as f:
+    # Move to 6th byte from start
+    f.seek(6, 0)  # from start
+    print("From start:", f.read(5))   # b'World'
+
+    # Move 6 bytes forward from current position
+    f.seek(6, 1)  # from current
+    print("From current:", f.read(3))
+
+    # Move 7 bytes back from end
+    f.seek(-7, 2)  # from end
+    print("From end:", f.read())
+# Output:
+# From start: b'world'
+# From current: b'and'
+```
+
+---
+
+## 36 — Copy a File
+
+### Manual Copy
+
+```python
+# Open the source file in read mode and the destination in write mode
+with open("source.txt", 'r') as source, open("destination_file", 'w') as destination:
+    for line in source:
+        destination.write(line)
+```
+
+### Using `shutil`
+
+```python
+import shutil
+
+# Copies only content (no metadata)
+shutil.copyfile(src="source.txt", dst="destination_file1")
+
+# Copies content + permissions
+shutil.copy(src="source.txt", dst="destination_file2")
+
+# Copies content + all metadata (timestamps, permissions)
+shutil.copy2(src="source.txt", dst="destination_file3")
+```
+
+| Method | Content | Permissions | Timestamps |
+|--------|---------|-------------|-----------|
+| `copyfile` | ✅ | ❌ | ❌ |
+| `copy` | ✅ | ✅ | ❌ |
+| `copy2` | ✅ | ✅ | ✅ |
+
+---
+
+## 38 — Move a File
+
+```python
+import os
+import shutil
+
+# Replace/move using os (files only)
+os.replace(src="source.txt", dst="destination_file1")
+
+# Move using shutil (works for files and directories)
+shutil.move(src="source.txt", dst="destination_file2")
+```
+
+---
+
+## 39 — Delete a File
+
+Use `os` or `shutil` depending on what you want to delete. Always check existence first.
+
+```python
+import os
+import shutil
+
+os.rmdir('empty_dir')            # Deletes an empty directory
+os.remove('example_file.txt')   # Deletes a file
+shutil.rmtree('example_dir')    # Deletes a directory and ALL its contents
+```
+
+---
+
+## File Operations — Module Summary
+
+| Action | pathlib | os | with open | shutil |
+|--------|---------|----|-----------|--------|
+| Detect | ✅ | ✅ (best) | | |
+| Read | | | ✅ | |
+| Write | | | ✅ | |
+| Copy | | | ✅ | ✅ (best) |
+| Move | | ✅ | | ✅ (best) |
+| Delete | | ✅ | | ✅ |
+
+---
+
+## 40 — Module
+
+A **module** is a Python file that contains reusable code — functions, classes, and variables — designed to organize and simplify your programs.
+
+- **Standard** — Built-in modules like `math`, `os`.
+- **Third-party** — Installed via `pip`.
+- **Custom** — Created by you.
+
+```python
+# "Test1.py" file
+def function(number):
+    print(f"From Test{number}: {number * 10}")
+
+function(1)  # Output: From Test1: 10
+```
+
+```python
+# "Test2.py" file
+import Test1
+
+Test1.function(2)
+# Output: From Test1: 10  # From running the Test1 Code
+# Output: From Test2: 20  # From the current Code (Test2)
+```
+
+**Output:**
+```
+From Test1: 10
+From Test2: 20
+```
+
+---
+
+## 40-A — `if __name__ == "__main__"`
+
+This conditional checks whether the script is being **run directly** or **imported as a module**.
+
+- When run directly → `__name__` is set to `"__main__"`.
+- When imported → `__name__` is set to the module's file name.
+
+```python
+# "Test1.py" file
+def greet():
+    print("Hello from Test1!")
+
+if __name__ == "__main__":
+    greet()
+    print(f"Script is being run directly, in \"{__name__}\" file")
+else:
+    print(f"This Code is Imported to {__name__} file")
+```
+
+**When run directly:**
+```
+Hello from Test1!
+Script is being run directly, in "__main__" file
+```
+
+**When imported:**
+```
+This Code is Imported to Test1 file
+Hello from Test1!
+```
+
+---
+
+## 41 — Object-Oriented Programming (OOP)
+
+**OOP** is a programming paradigm that organizes code into **objects**, which combine data (attributes) and functions (methods).
+
+- **Class** — A blueprint/template that defines the structure and behavior of objects. It specifies attributes (data/properties) and methods (functions/behaviors).
+- **Object** — A specific instance of a class. Each object has a unique memory location and its own set of attribute values.
+
+### Class Variables
+
+Shared among **all instances** of a class. Defined outside any method. Accessed via the class name or `self`, and modified using a `@classmethod`.
+
+### `__init__` (Constructor)
+
+Automatically called during object creation to initialize attributes. Cannot use `return`.
+
+### Attributes (Instance Variables)
+
+Unique to individual objects. Initialized in `__init__` to store object-specific data. Can be modified after creation.
+
+### Methods
+
+Functions within a class that define behaviors. The first parameter `self` refers to the calling object.
+
+```python
+class Car:
+    wheels = 4  # Class variable
+
+    def __init__(self, make, model, year):
+        self.make = make    # Instance variable
+        self.model = model
+        self.year = year
+        self.is_car = True
+        print("Object created")
+
+    def drive(self):
+        return f"The {self.make} {self.model} is now driving with {Car.wheels} wheels"
+
+car1 = Car("Toyota", "Corolla", 2020)
+car2 = Car("Honda", "Civic", 2021)
+
+print(car2.model)     # Civic
+print(car2.is_car)    # True
+print(car1.drive())   # The Toyota Corolla is now driving with 4 wheels
+car2.wheels = 3       # Change instance class variable value
+print(car2.drive())   # The Honda Civic is now driving with 3 wheels
+```
+
+**Output:**
+```
+Object created
+Object created
+Civic
+True
+The Toyota Corolla is now driving with 4 wheels
+The Civic is now driving with 3 / 4 wheels
+```
+
+---
+
+### `self` — What It Is and Why It Matters
+
+`self` refers to the **specific instance** of the object being created or modified. It allows each object to store its own attributes and access its own methods.
+
+Without `self`, changes would apply only to temporary local variables — the object would not remember its updated values.
+
+```python
+class Plant:
+    def __init__(self, name, height, age):
+        self.name = name
+        height = height + 10  # ❌ local only — NOT stored on object
+        self.age = age
+        print(f"{self.name} grew to {height}cm")
+
+rose = Plant("rose", 25, 30)
+
+if rose.height > 30:  # ❌ ERROR — height was never assigned to self
+    print(f"{rose.name} is tall!")
+```
+
+**Output:**
+```
+rose grew to 35cm
+AttributeError: 'Plant' object has no attribute 'height'
+```
+
+---
+
+### How Objects Are Stored
+
+Instance data is stored in memory using an internal dictionary (`__dict__`). When you do `self.attribute = value`, Python inserts an entry into the object's `__dict__`.
+
+```python
+class Book:
+    def __init__(self, title, pages):
+        self.title = title
+        self.pages = pages
+
+b = Book("Python Basics", 200)
+print(b.__dict__)            # {'title': 'Python Basics', 'pages': 200}
+print(b.title)               # Python Basics
+print(b.__dict__['title'])   # Python Basics
+```
+
+---
+
+### Using the Class Name Instead of `self`
+
+Use the class name when working with **class-level data** shared by all instances.
+
+```python
+class Car:
+    total = 0  # class variable (shared)
+
+    def __init__(self):
+        Car.total += 1
+
+    def show():
+        print(f"There are {Car.total} cars")
+
+car_1 = Car()
+car_2 = Car()
+car_3 = Car()
+Car.show()
+```
+
+**Output:**
+```
+There are 3 cars
+```
+
+---
+
+## Protected Attributes
+
+A **single underscore** prefix (e.g., `_age`) is a convention indicating the attribute is for **internal use only**. It is NOT enforced by Python — external code can still access it.
+
+```python
+class Plant:
+    def __init__(self, name, age):
+        self.name = name
+        self._age = age   # protected attribute
+
+    def grow(self):
+        self._age += 1
+        print(f"{self.name} is now {self._age} days old.")
+
+rose = Plant("Rose", 30)
+print(rose.name)    # Output: Rose
+print(rose._age)    # Output: 30 (accessible but not recommended)
+rose._age = 14      # This takes effect
+rose.grow()         # Output: Rose is now 15 days old.
+```
+
+---
+
+## Name Mangling
+
+A **double underscore** prefix (e.g., `__age`) triggers **name mangling** — Python renames the attribute internally to `_ClassName__age`. This prevents direct access by the original name from outside the class.
+
+```python
+class Plant:
+    def __init__(self, name, age):
+        self.name = name
+        self.__age = age  # double underscore
+
+    def grow(self):
+        self.__age += 1
+        print(f"{self.name} is now {self.__age} days old.")
+
+rose = Plant("Rose", 30)
+# print(rose.__age)         # AttributeError
+rose._Plant__age = 14       # Accessible via mangled name (not recommended)
+print(rose._Plant__age)     # Output: 30
+rose.grow()
+```
+
+---
+
+## 56 — Inheritance (OOP)
+
+**Inheritance** allows one class (child/subclass) to inherit the attributes and methods of another class (parent/superclass). The child class can extend or override the parent's behavior.
+
+**Types of inheritance:**
+- **Single** — Child inherits from one parent.
+- **Multiple** — Child inherits from multiple parents.
+- **Multilevel** — Chain of inheritance (A → B → C).
+- **Hierarchical** — Multiple children from one parent.
+- **Hybrid** — Combination of types.
+
+```python
+# Parent class
+class Animal:
+    def __init__(self, name):
+        self.name = name
+        self.animal = "Animal"
+
+    def Animal_speak(self):
+        return f"The {self.animal} makes a sound."
+
+# Child class
+class Dog(Animal):
+    def Dog_speak(self):
+        return f"{self.name} barks."
+
+# Another child class
+class Cat(Animal):
+    def Cat_speak(self):
+        return f"{self.name} meows."
+
+dog = Dog("Buddy")
+cat = Cat("Whiskers")
+
+print(dog.Dog_speak())       # Buddy barks.
+print(cat.Cat_speak())       # Whiskers meows.
+print(cat.Animal_speak())    # The Animal makes a sound.
+```
+
+**Output:**
+```
+Buddy barks.
+Whiskers meows.
+The Animal makes a sound.
+```
+
+> **Note:** A child class cannot pick and choose which arguments to pass from a parent's constructor. If `super().__init__()` is called, all required parent parameters must be satisfied. To handle cases where the child only cares about some attributes, provide **default values** for unused parameters.
+
+```python
+class Parent:
+    def __init__(self, name, age, role):
+        self.name = name
+        self.age = age
+        self.role = role
+
+class Child(Parent):
+    def __init__(self, name):
+        # Provide default values for other parameters
+        super().__init__(name, age=0, role="unknown")
+        print(f"Name: {self.name}, Age: {self.age}, Role: {self.role}")
+
+c = Child("Alice")
+```
+
+---
+
+## 46 — Method Chaining (OOP)
+
+**Method chaining** (fluent interface) allows multiple methods to be called on the same object in a single line. Each method returns `self` to enable chaining.
+
+```python
+class Calculator:
+    def __init__(self, value=0):
+        self.value = value
+
+    def add(self, num):
+        self.value += num
+        return self  # Return the object for chaining
+
+    def multiply(self, num):
+        self.value *= num
+        return self
+
+    def divide(self, num):
+        if num != 0:
+            self.value /= num
+        return self
+
+    def result(self):
+        return self.value
+
+calc = Calculator()
+result = calc.add(10).multiply(5).divide(2).result()
+print(f"Result: {result}")  # Output: Result: 25.0
+```
+
+**Output:**
+```
+Result: 25.0
+```
+
+> `self` is what makes method chaining work: each call receives the same object with its updated state. Without `self`, changes would only exist temporarily inside the method.
+
+---
+
+## 47 — The `super()` Function (OOP)
+
+`super()` accesses methods and attributes of a **parent class** without directly naming it. Particularly useful when a child class overrides a method but still needs the parent's functionality.
+
+> In **multiple inheritance**, `super()` follows the **MRO (Method Resolution Order)** to determine which method to call.
+
+```python
+class Parent:
+    def __init__(self, name):
+        self.name = name
+
+    def greet(self):
+        print(f"Hello, my name is {self.name}.")
+
+class Child(Parent):
+    def __init__(self, name, age):
+        super().__init__(name)  # Call Parent's __init__
+        self.age = age
+
+    def greet(self):
+        super().greet()  # Call Parent's greet
+        print(f"I am {self.age} years old.")
+
+child = Child("Alice", 12)
+child.greet()
+```
+
+**Output:**
+```
+Hello, my name is Alice.
+I am 12 years old.
+```
+
+---
+
+## 48 — Abstract Methods (OOP)
+
+**Abstract classes** contain one or more abstract methods (templates with no implementation). They **cannot be instantiated directly** — subclasses must provide concrete implementations.
+
+To define an abstract class: import `ABC` from the `abc` module and use `@abstractmethod`.
+
+```python
+from abc import ABC, abstractmethod
+
+class Shape(ABC):  # Abstract base class
+    @abstractmethod
+    def calculate_area(self):
+        pass
+
+class Circle(Shape):  # Subclass implementing the abstract method
+    def __init__(self, radius):
+        self.radius = radius
+
+    def calculate_area(self, pi):
+        return pi * (self.radius ** 2)
+
+circle = Circle(5)
+print("Circle Area:", circle.calculate_area(3.14159))
+
+try:
+    shape = Shape()  # Cannot instantiate abstract class
+except Exception as e:
+    print(f"Error: {e}")
+```
+
+**Output:**
+```
+Circle Area: 78.53975
+Error: Can't instantiate abstract class Shape without an implementation for abstract method 'calculate_area'
+```
+
+### How Python Tracks Abstract Methods
+
+Each class inheriting from `ABC` has `__abstractmethods__` — a frozenset of unimplemented abstract methods. If non-empty → class is abstract → instantiation raises `TypeError`.
+
+```python
+from abc import ABC, abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def make_sound(self):
+        """Abstract method to be implemented by subclasses"""
+        pass
+
+    def eat(self):
+        print("Eating food")
+
+class Dog(Animal):
+    def make_sound(self):
+        return "Bark"
+
+# Inspect
+print("Animal.__abstractmethods__:", Animal.__abstractmethods__)
+# frozenset({'make_sound'})
+print("Animal.make_sound.__isabstractmethod__:", True)
+print("Animal.eat.__isabstractmethod__:", False)
+print("Dog.__abstractmethods__:", Dog.__abstractmethods__)
+# frozenset()
+print(Dog().make_sound())
+# Dog makes sound: Bark
+```
+
+**Output:**
+```
+Animal.__abstractmethods__: frozenset({'make_sound'})
+Animal.make_sound.__isabstractmethod__: True
+Animal.eat.__isabstractmethod__: False
+Dog.__abstractmethods__: frozenset()
+Dog makes sound: Bark
+```
+
+---
+
+## 32-A — `NotImplementedError`
+
+`NotImplementedError` is a built-in exception that indicates a method declared in a base class has **not been implemented** by a subclass. Used as a reminder to provide the implementation.
+
+```python
+class Animal:
+    def make_sound(self):
+        raise NotImplementedError("Subclasses must implement make_sound method")
+
+class Dog(Animal):
+    def make_sound(self):
+        return "Dog said: Woof!"
+
+class Cat(Animal):
+    pass  # Cat doesn't implement make_sound
+
+print(Dog().make_sound())
+
+try:
+    Cat().make_sound()  # Raises NotImplementedError
+except Exception as exception:
+    print("Error:", exception)
+```
+
+**Output:**
+```
+Dog said: Woof!
+Error: Subclasses must implement make_sound method
+```
+
+---
+
+## 49 — The Class Method (OOP)
+
+A `@classmethod` is bound to the **class itself** rather than to instances. It takes `cls` as its first parameter instead of `self`.
+
+**Use cases:**
+1. Modify shared class variables (changes apply to all instances).
+2. Alternative constructors — initialize a class in different ways.
+
+> `self` is NOT accessible inside a `@classmethod`.
+
+### (*1) Using `@classmethod` — shared counter
+
+```python
+class Example:
+    count = 0
+
+    @classmethod
+    def increment_count(cls):
+        cls.count += 1
+        return cls.count
+
+print(f"count = {Example().increment_count()}")    # count = 1
+print(f"count1 = {Example.increment_count()}")     # count1 = 2
+print(f"count1 = {Example.increment_count()}")     # count1 = 3
+
+example_instance2 = Example()
+print(f"count2 = {example_instance2.increment_count()}")  # count2 = 4
+```
+
+### Not Using `@classmethod` — per-instance counter
+
+```python
+class Example:
+    count = 0
+
+    def increment_count(self):
+        self.count += 1
+        return self.count
+
+example_instance1 = Example()
+print(f"count = {Example().increment_count()}")       # count = 1
+print(f"count1 = {example_instance1.increment_count()}")  # count1 = 1
+print(f"count1 = {example_instance1.increment_count()}")  # count1 = 2
+
+example_instance2 = Example()
+print(f"count2 = {example_instance2.increment_count()}")  # count2 = 1
+```
+
+### (*2) Alternative Constructor
+
+```python
+class Person:
+    current_year = 2000  # Class attribute
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.current_year = 2024
+
+    @classmethod
+    def from_birth_year(cls, name, age):
+        current_year = 2024
+        birth_year = current_year - age
+        return Person(name, age, birth_year)
+
+Person("Alice", 40, 1984)
+p = Person.from_birth_year("Alice", 40)
+print(p.birth_year)
+```
+
+**Output:**
+```
+My name is Alice, i'm 40, i was born in 1984
+My name is Alice, i'm 40, i was born in 1984
+1984
+```
+
+### (*3) `self` Not Accessible in `@classmethod`
+
+```python
+class Person:
+    current_year = 2000
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.current_year = 2024
+
+    @classmethod
+    def from_birth_year(cls, name, birth_year):
+        age = self.current_year - birth_year  # ❌ NameError
+        return cls(name, age)
+
+try:
+    Person.from_birth_year(name="Alice", birth_year=1994)
+except NameError:
+    print("Error: name 'self' is not defined ('self' is not accessible in classmethod)")
+```
+
+**Output:**
+```
+Error: name 'self' is not defined ('self' is not accessible in classmethod)
+```
+
+### Why `cls` Matters (vs. Hard-coding Class Name)
+
+Using `cls` preserves correct inheritance — without it, subclasses are forced to share the base class's state.
+
+```python
+# ❌ Hard-coded (breaks inheritance)
+class Base:
+    count = 0
+    @classmethod
+    def inc(cls):
+        Base.count += 1  # hard-coded
+
+class Child(Base):
+    count = 10
+
+Child.inc()
+print(Base.count)   # 1
+print(Child.count)  # 10  (unchanged!)
+
+# ✅ Using cls (correct)
+class Base:
+    count = 0
+    @classmethod
+    def inc(cls):
+        cls.count += 1  # dynamic
+
+class Child(Base):
+    count = 10
+
+Child.inc()
+print(Base.count)   # 0
+print(Child.count)  # 11
+```
+
+---
+
+## Accessing Outer Class Instance in Nested Classes
+
+A nested class does **not** automatically have access to the enclosing outer class instance. You must **explicitly pass** the outer instance.
+
+```python
+class Garden:
+    def __init__(self, owner):
+        self.owner = owner
+
+    class Plant:
+        def __init__(self, outer_instance):
+            self.outer = outer_instance  # store reference to outer instance
+
+        def show_owner(self):
+            print(f"The owner is {self.outer.owner}")
+
+    def create_magic_object(self):
+        self.object_in_class = self.Plant(self)
+        self.object_in_class.show_owner()
+
+object_out_class = Garden("Alice")
+object_out_class.create_magic_object()
+```
+
+**`__dict__` Proof — No Automatic Link:**
+```python
+class Garden:
+    def __init__(self, owner):
+        self.owner = owner
+    class Plant:
+        def __init__(self):
+            pass
+
+g = Garden("Alice")
+p = g.Plant()
+print("Garden object dict:", g.__dict__)   # {'owner': 'Alice'}
+print("Plant object dict:", p.__dict__)    # {}  ← no reference to Garden
+```
+
+**With explicit reference:**
+```python
+class Garden:
+    def __init__(self, owner):
+        self.owner = owner
+    class Plant:
+        def __init__(self, outer):
+            self.outer = outer
+
+g = Garden("Alice")
+p = g.Plant(g)
+print("I know the object where:", p.__dict__)
+# Output: {'outer': <__main__.Garden object at 0x...>}
+```
+
+---
+
+## Class Variable & Nested Class
+
+In a **nested class**, the class name is NOT in the global namespace — it only exists within the enclosing class's namespace. Therefore, inside nested class methods, always use `cls` (not the class name directly) to access class variables.
+
+```python
+# ✅ Using cls inside nested class
+class Outer:
+    class Inner:
+        value = 0
+        @classmethod
+        def set_value(cls):
+            cls.value = 100
+
+Outer.Inner.set_value()
+print(Outer.Inner.value)  # 100
+
+# ✅ Using Outer.Inner directly (also works)
+class Outer:
+    class Inner:
+        value = 0
+        @classmethod
+        def set_value(cls):
+            Outer.Inner.value = 100
+
+Outer.Inner.set_value()
+print(Outer.Inner.value)  # 100
+```
+
+```python
+# ❌ Inner.value = 100 inside the method will FAIL
+class Outer:
+    class Inner:
+        value = 0
+        @classmethod
+        def set_value(cls):
+            Inner.value = 100  # NameError — 'Inner' not in global namespace
+```
+
+**For top-level classes, both work:**
+```python
+class A:
+    x = 10
+
+    def set_with_name(self):
+        A.x = 20  # works — A is in global namespace
+
+    @classmethod
+    def set_with_cls(cls):
+        cls.x = 30  # preferred — supports inheritance
+
+A.set_with_cls()
+print(A.x)  # 30
+a = A()
+a.set_with_name()
+print(A.x)  # 20
+```
+
+---
+
+## 50 — The Static Method (OOP)
+
+A `@staticmethod` is defined within a class but **not tied to a specific instance or the class itself**. It cannot access `self` or `cls`. Used for utility/helper functions that are independent of class data.
+
+```python
+class Calculator:
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+# Call directly on the class
+print(Calculator.add(5, 3))  # Output: 8
+
+# Also accessible through an instance
+calc = Calculator()
+print(calc.add(7, 2))  # Output: 9
+```
+
+---
+
+## 51 — Objects as Arguments (OOP)
+
+You can pass objects as arguments to functions, just like any other data type. You are passing a **reference** to the object.
+
+```python
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+def greet(person):
+    # Accepts a Person object and prints a greeting
+    print(f"Hello, {person.name}!")
+
+person1 = Person("Alice")
+greet(person1)  # Output: Hello, Alice!
+```
+
+---
+
+## 52 — Calling a Method Within a Method (OOP)
+
+Invoking one method from inside another method within the same class. Promotes code reuse and the **DRY** (Don't Repeat Yourself) principle.
+
+```python
+class MyClass:
+    def method1A(self):
+        return "Method 1 is called"
+
+    def method1B(self):
+        print(f"call Method 1: {self.method1A()}")  # Calling method1A inside method1B
+
+object = MyClass()
+object.method1B()
+```
+
+**Output:**
+```
+call Method 1: Method 1 is called
+```
+
+---
+
+## 45 — Method Overriding / Polymorphism (OOP)
+
+**Method overriding** is when a subclass provides its own implementation for a method already defined in its superclass, maintaining the same method signature.
+
+**Subtype polymorphism** — objects of different subclasses can be used interchangeably through a reference to their common parent type. Python dynamically determines the correct overridden implementation at runtime.
+
+```python
+# Parent class
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+    def speak(self):
+        return f"{self.name} makes a sound."
+
+# Child class overriding speak()
+class Dog(Animal):
+    def speak(self):
+        return f"{self.name} barks."
+
+dog = Dog("Buddy")
+print(dog.speak())  # Output: Buddy barks.
+```
+
+**Output:**
+```
+Buddy barks.
+```
+
+### Subtype Polymorphism Example
+
+```python
+from abc import ABC, abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def make_sound(self):
+        pass
+
+class Dog(Animal):
+    def make_sound(self):
+        return "Bark"
+
+class Cat(Animal):
+    def make_sound(self):
+        return "Meow"
+
+def animal_sound(animal: Animal):
+    print(f"The animal says: {animal.make_sound()}")
+
+dog = Dog()
+cat = Cat()
+animal_sound(dog)  # The animal says: Bark
+animal_sound(cat)  # The animal says: Meow
+print(dog.make_sound())  # Bark
+```
+
+---
+
+## Dunder Methods (Magic Methods)
+
+**Dunder methods** (double underscore methods / magic methods) are predefined methods whose names start and end with `__`. Python calls them automatically in response to built-in operations.
+
+| Method | Triggered By | Purpose |
+|--------|-------------|---------|
+| `__init__(self, ...)` | `ClassName()` | Initialize object |
+| `__str__(self)` | `print()`, `str()` | Human-readable string |
+| `__repr__(self)` | `repr()`, interactive shell | Unambiguous debug string |
+| `__add__(self, other)` | `+` operator | Addition |
+| `__mul__(self, other)` | `*` operator | Multiplication |
+| `__eq__(self, other)` | `==` operator | Equality check |
+| `__len__(self)` | `len()` | Length |
+| `__getitem__(self, key)` | `obj[key]` | Index access |
+| `__call__(self, ...)` | `obj()` | Call object like a function |
+
+```python
+class Demo:
+    def __init__(self, name, values):
+        self.name = name
+        self.values = values
+
+    def __str__(self):
+        return f"Demo object: {self.name}"
+
+    def __repr__(self):
+        return f"Demo(name='{self.name}', values={self.values})"
+
+    def __add__(self, other):
+        return self.name + other.name, self.values + other.values
+
+    def __mul__(self, times):
+        return self.name * times, self.values * times
+
+    def __eq__(self, other):
+        return self.name == other.name and self.values == other.values
+
+    def __len__(self):
+        return len(self.values)
+
+    def __getitem__(self, index):
+        return self.values[index]
+
+    def __call__(self):
+        print(f"Called object: {self.name}")
+
+# Usage
+a = Demo("A", [1, 2, 3])
+b = Demo("B", [4, 5])
+
+print(a)          # Demo object: A         (__str__)
+print(repr(a))    # Demo(name='A', values=[1, 2, 3])  (__repr__)
+c = a + b         # ('AB', [1, 2, 3, 4, 5])  (__add__)
+print(c)
+d = a * 2         # ('AA', [1, 2, 3, 1, 2, 3])  (__mul__)
+print(d)
+print(a == b)     # False  (__eq__)
+print(len(a))     # 3      (__len__)
+print(a[1])       # 2      (__getitem__)
+a()               # Called object: A  (__call__)
+```
+
+**Output:**
+```
+Demo object: A
+Demo(name='A', values=[1, 2, 3])
+('AB', [1, 2, 3, 4, 5])
+('AA', [1, 2, 3, 1, 2, 3])
+False
+3
+2
+Called object: A
 ```
