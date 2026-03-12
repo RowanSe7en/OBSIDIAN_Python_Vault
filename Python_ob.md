@@ -1,7 +1,7 @@
 # Python
 ---
 
-## Printing & Variables
+## 1 - Printing & Variables
 
 In Python, the `print()` function is used to display output, such as text, variables, or expressions, on the screen. You can include variables in `print()` using comma-separated values or by embedding them in formatted strings using the plus sign. Using `print(f'')` with f-strings, variables and expressions are inserted dynamically within curly braces `{}`. This approach is useful for generating readable and dynamic output, especially for multi-line text that includes variables or calculations.
 
@@ -35,7 +35,7 @@ Name: Alice, Age: 25
 
 ---
 
-## 30 - String Formatting
+## 2 - String Formatting
 
 String formatting in Python allows you to create strings with placeholders that can be dynamically filled with variables or values.
 
@@ -99,7 +99,7 @@ The number in hexadecimal is: 14
 
 ---
 
-## 1 - Python Data Types
+## 3 - Python Data Types
 
 Python data types include integers, floating-point numbers, strings, and Booleans, each serving a distinct purpose in programming.
 
@@ -110,7 +110,7 @@ Python data types include integers, floating-point numbers, strings, and Boolean
 
 Additionally, **multiple assignment** allows assigning values to multiple variables in a single line. The `end=""` parameter in `print()` enables chaining multiple print statements on the same line.
 
-### (*1) Integers & Floats
+### 3.1 Integers & Floats
 
 ```python
 # Integer
@@ -129,7 +129,7 @@ Age + 1: 26, Height: 5.8
 type of Age: <class 'int'>, type of Height: <class 'float'>
 ```
 
-### (*2) Strings
+### 3.2 Strings
 
 ```python
 # Strings
@@ -149,7 +149,7 @@ Multiline Text: This is
 a multiline string.
 ```
 
-### (*3) Booleans
+### 3.3 Booleans
 
 ```python
 # Booleans
@@ -177,7 +177,7 @@ Non-empty string is True? True
 Zero is True? False, Empty list is True? False
 ```
 
-### (*4) Multiple Assignment & `end=""`
+### 3.4 Multiple Assignment & `end=""`
 
 ```python
 male, name, age = True, "Spongebob", 30
@@ -245,7 +245,7 @@ print(converted_number)  # Output: 7
 
 ---
 
-## 3 - String Methods
+## 5 - String Methods
 
 In Python, strings come with a variety of built-in methods accessed using the dot operator (`.`):
 
@@ -296,7 +296,7 @@ Length of the original text: 24
 
 ---
 
-## 7 - List
+## 6 - List
 
 A list in Python is an **ordered, mutable** collection that allows duplicate values. The syntax is `listName = [1, 2, 3]`.
 
@@ -346,7 +346,7 @@ print(new_list)
 [9, 8, 7, 6, 5, 4, 2, 1, 77, 88, 99]
 ```
 
-### List Memory Model
+### 6.1 List Memory Model
 
 In Python, a list variable doesn't contain the list directly — it holds a **reference (pointer)** to the list object stored in the **heap**. Each item in the list is also a reference to another object in the heap.
 
@@ -398,7 +398,7 @@ Alias list ID: 138798094577472
 
 ---
 
-## 7-B - 2D List
+### 6.2 2D List
 
 A 2D list is a **list of lists** where each inner list represents a row and its elements represent columns, useful for matrices, grids, or tables.
 
@@ -425,7 +425,7 @@ print(matrix)
 
 ---
 
-## 8 - Tuple
+## 7 - Tuple
 
 A tuple in Python is an **ordered, immutable** collection. Unlike lists, elements cannot be changed once created. Syntax: `tupleName = (1, 2, 3)`.
 
@@ -447,7 +447,7 @@ print(my_tuple.count(4))
 2
 ```
 
-### Tuple Memory Model
+### 7.1 Tuple Memory Model
 
 When a tuple is created, Python allocates memory for the tuple object itself and a fixed number of reference slots. Tuples do **not** reserve extra memory for resizing (unlike lists), making them more memory-efficient.
 
@@ -475,7 +475,7 @@ Tuple index 0 ID: 133803312729184
 Tuple index 1 ID: 133803312728992
 ```
 
-### Tuple Immutability vs. Rebinding
+### 7.2 Tuple Immutability vs. Rebinding
 
 Tuples are immutable — you cannot change their references. However, you can **rebind** a variable to a new tuple. Also, if a tuple contains a mutable object (like a list), that object itself can still be modified.
 
@@ -517,7 +517,7 @@ After modifying list inside tuple id: 140497399086528
 
 ---
 
-## 9 - Set
+## 8 - Set
 
 A set in Python is an **unordered, mutable** collection that **does not allow duplicate values** (duplicates are removed automatically). Defined using `{}` or `set()`. Python also offers **`frozenset`**, which is an immutable set.
 
@@ -559,7 +559,7 @@ frozenset({1, 2, 3, 4})
 {1, 2, 3}
 ```
 
-### Set Intersection — Three Ways
+### 8.1 Set Intersection — Three Ways
 
 ```python
 s1 = {2, 5, 8}
@@ -581,7 +581,7 @@ print(s5)   # Output: set() — empty set has no common elements
 s5 = {2}.intersection(s1, s2)
 ```
 
-### Why `dict` Can Be Nested but `set` Cannot (and Why `frozenset` Fixes It)
+### 8.2 Why `dict` Can Be Nested but `set` Cannot (and Why `frozenset` Fixes It)
 
 A `frozenset` is hashable because it is **immutable**, whereas a regular `set` is mutable and therefore **unhashable**. Hash-based structures require stable hash values. Since a normal `set` can be modified, its hash would change, corrupting the hash table. `frozenset` is an immutable snapshot, so Python can compute a stable hash from its elements.
 
@@ -589,7 +589,7 @@ Dictionaries allow sets as **values** (not keys) because only keys must be hasha
 
 ---
 
-## 10 - Dictionary
+## 9 - Dictionary
 
 A dictionary is a **mutable, unordered (before Python 3.7) / ordered (Python 3.7+)** collection of **key-value pairs**. Each key is unique. Defined using `{}` with `:` separating keys and values.
 
@@ -696,7 +696,7 @@ print(string, end=", "); print(list2, end=", "); print(set_union, end=", "); pri
 
 ---
 
-## 11 - User Input
+## 10 - User Input
 
 In Python, user input is collected using the built-in `input()` function, which returns input as a **string**. Type casting is often required for other data types.
 
@@ -715,7 +715,7 @@ Hello, Joe! You are 31 years old.
 
 ---
 
-## 12 - Math Functions
+## 11 - Math Functions
 
 Python provides a `math` module with tools for mathematical operations: `math.sqrt()`, `math.ceil()`, `math.floor()`, `math.sin()`, `math.cos()`, `math.tan()`, `math.radians()`, `math.degrees()`, `math.exp()`, `math.log()`, `math.pi`, and more.
 
@@ -749,7 +749,7 @@ Value of pi: 3.141592653589793
 
 ---
 
-## Slicing and Indexing
+## 12 - Slicing and Indexing
 
 **Indexing** retrieves a single element by position (starting at `0`, negative indexes count from the end). **Slicing** extracts a sub-sequence with `[start:stop:step]` (start inclusive, stop exclusive). The `slice()` method creates a reusable slice object.
 
@@ -795,7 +795,7 @@ print(my_list[step_slice])      # [10, 30, 50]
 
 ---
 
-## 22 - Escape Characters
+## 13 - Escape Characters
 
 Escape characters are special characters preceded by a backslash `\`. The `end=""` parameter in `print()` changes what is printed at the end (default is `\n`).
 
@@ -809,7 +809,7 @@ Escape characters are special characters preceded by a backslash `\`. The `end="
 | `\'`   | Single quote    | `\a`   | Audible bell     |
 | `\"`   | Double quote    | `\f`   | Form Feed        |
 
-### ASCII Reference Table
+### 13.1 ASCII Reference Table
 
 | Decimal | Octal | Hex | Binary      | Value |
 |---------|-------|-----|-------------|-------|
@@ -873,7 +873,7 @@ Beep!
 
 ---
 
-## If Statement
+## 14 - If Statement
 
 An `if` statement executes a block of code only if a specified condition is `True`. Optional `elif` and `else` clauses handle additional conditions.
 
@@ -902,7 +902,7 @@ else:
 The number is positive.
 ```
 
-### Nested If
+### 14.1 Nested If
 
 ```python
 age = 20
@@ -958,7 +958,7 @@ go back straight in the line
 
 ---
 
-## While Loop
+## 16 - While Loop
 
 A `while` loop repeatedly executes a block of code as long as a condition is `True`. Useful when the number of iterations is unknown in advance.
 
@@ -998,7 +998,7 @@ You did choose the wrong number, You stuck in a loop!
 
 ---
 
-## For Loop
+## 17 - For Loop
 
 A `for` loop iterates over a sequence (list, tuple, string, or range) and executes a block for each element.
 
@@ -1121,7 +1121,7 @@ for x in range(1, 5):
 
 ---
 
-## Control Flow Statements
+## 19 - Control Flow Statements
 
 - `break` — Terminates the loop immediately
 - `continue` — Skips the current iteration and moves to the next
@@ -1150,7 +1150,7 @@ The number is: 3
 
 ---
 
-## 24 - Function Definition
+## 20 - Function Definition
 
 A function is a reusable block of code defined with the `def` keyword. The `return` statement sends the result back to the caller. Functions can have **default parameters** and **keyword arguments**.
 
@@ -2788,7 +2788,7 @@ call Method 1: Method 1 is called
 
 ---
 
-## 45 — Method Overriding / Polymorphism (OOP)
+# 45 — Method Overriding / Polymorphism (OOP)
 
 **Method overriding** is when a subclass provides its own implementation for a method already defined in its superclass, maintaining the same method signature.
 
@@ -2847,7 +2847,7 @@ print(dog.make_sound())  # Bark
 
 ---
 
-## Dunder Methods (Magic Methods)
+# Dunder Methods (Magic Methods)
 
 **Dunder methods** (double underscore methods / magic methods) are predefined methods whose names start and end with `__`. Python calls them automatically in response to built-in operations.
 
@@ -2920,3 +2920,822 @@ False
 2
 Called object: A
 ```
+
+---
+
+# 54 - The Walrus Operator `:=`
+
+The walrus operator, also known as the **assignment expression operator**, is a feature introduced in Python 3.8. It is represented by the `:=` syntax. The purpose of the walrus operator is to **assign a variable to a value as part of an expression**, typically within control flow statements or when passing arguments to functions.
+
+```python
+#1
+data = [1, 2, 3, 4, 5]
+
+while (n := len(data)) > 0:
+    print(f"List length: {n}")
+    data.pop()
+
+#2
+text = "Hello, World!"
+
+if (length := len(text)) > 10:
+    print(f"The text is long with {length} characters.")
+```
+
+**Output:**
+```
+List length: 5
+List length: 4
+List length: 3
+List length: 2
+List length: 1
+The text is long with 13 characters.
+```
+
+---
+
+# 55 - Lambda Functions
+
+Lambda functions in Python, often referred to as **"anonymous functions"**, are small, inline functions that can have any number of parameters but only one expression. They are defined using the `lambda` keyword followed by the parameters, a colon (`:`), then the expression to be evaluated.
+
+**Syntax:** `(lambda parameters : expression)(arguments)`
+
+```python
+add = lambda a, b: a + b
+print(add(5, 3))  # Output: 8
+
+name = lambda first_name, last_name: first_name + " " + last_name
+print(name(first_name="Joe", last_name="Doe"))  # Output: Joe Doe
+
+# Using a lambda function directly without assigning it to a variable
+print((lambda x, y: x + y)(7, 5))  # Output: 12
+
+print((lambda age: True if age < 10 else False)(9))  # Output: True
+```
+
+---
+
+# 56 - `sorted()` and `sort()`
+
+- **`sorted(sequence)`** — creates a **new sorted list** without modifying the original; suitable for preserving original order or sorting immutable sequences.
+- **`sequence.sort()`** — sorts **in-place**, only works on lists.
+- Both accept optional parameters: `reverse=True` or `key=` to define a custom sort index.
+
+```python
+#sorted()
+numbers = [3, 1, 4, 1, 5, 9]
+sorted_numbers = sorted(numbers)
+print(sorted_numbers)  # Output: [1, 1, 3, 4, 5, 9]
+
+words = ['apple', 'grape', 'orange']
+print(sorted(words, key=len))  # Output: ['apple', 'grape', 'orange']
+
+sorted_numbers_desc = sorted(numbers, reverse=True)
+print(sorted_numbers_desc)  # Output: [9, 5, 4, 3, 1, 1]
+
+#sort()
+numbers = [3, 1, 4, 1, 5, 9]
+numbers.sort()
+print(numbers)  # Output: [1, 1, 3, 4, 5, 9]
+
+words = ['apple', 'grape', 'orange']
+words.sort(key=len)
+print(words)  # Output: ['apple', 'grape', 'orange']
+
+numbers.sort(reverse=True)
+print(numbers)  # Output: [9, 5, 4, 3, 1, 1]
+```
+
+---
+
+# 57 - The `map()` Function
+
+The `map()` function applies a given function to **each item of a sequence** (list, tuple, string) and returns a new sequence with the results.
+
+**Syntax:** `map(function, sequence)`
+
+> Converting the result of `map()` to a list is useful because `map()` returns a **lazy iterator** — it generates values on demand and can only be traversed once. By converting it to a list you can access all results immediately, reuse the data, and use list operations. Avoid for very large datasets.
+
+```python
+def double(x):
+    return x * 2
+
+numbers = [1, 2, 3, 4, 5]
+doubled_numbers = list(map(double, numbers))
+print(doubled_numbers)
+
+#2
+store = [("shirt", 20.00),
+         ("pants", 25.00),
+         ("jacket", 50.00),
+         ("socks", 10.00)]
+
+to_euros = lambda data: (data[0], data[1] * 0.82)
+store_euros = list(map(to_euros, store))
+for i in store_euros:
+    print(i)
+
+#3
+def capitalize_char(char):
+    return char.upper()
+
+string = "hello"
+capitalized_string = list(map(capitalize_char, string))
+print(capitalized_string)
+```
+
+**Output:**
+```
+[2, 4, 6, 8, 10]
+('shirt', 16.4)
+('pants', 20.5)
+('jacket', 41.0)
+('socks', 8.2)
+['H', 'E', 'L', 'L', 'O']
+```
+
+---
+
+# 58 - The `filter()` Function
+
+The `filter()` function filters elements of an iterable for which a given function returns `True`.
+
+**Syntax:** `filter(function, iterable)`
+
+> Like `map()`, `filter()` returns a **lazy iterator**. Convert to a list or tuple for repeated access. Avoid for very large datasets.
+
+```python
+#1
+numbers = [10, 20, 33, 41, 50, 62, 70, 85]
+
+ten_base = lambda num: num % 10 == 0
+print(list(filter(ten_base, numbers)))
+
+#2
+chapels = [("Alice", 22), ("Bob", 16), ("Charlie", 25), ("David", 18), ("Emily", 10)]
+
+adult_chapels = filter(lambda x: x[1] >= 18, chapels)
+adult_chapels_list = list(adult_chapels)
+
+print(adult_chapels_list)
+```
+
+**Output:**
+```
+[10, 20, 50, 70]
+[('Alice', 22), ('Charlie', 25), ('David', 18)]
+```
+
+---
+
+# 59 - The `reduce()` Function
+
+The `reduce()` function (from `functools`) **repeatedly applies a function** to elements of a sequence, cumulatively reducing it to a single value. It processes two elements at a time: starts with the first two, applies the function, then uses the result with the next element, and so on.
+
+```python
+from functools import reduce
+
+# Example 1: Using reduce() to calculate the product of a list
+numbers = [1, 2, 3, 4]
+product = reduce(lambda x, y: x * y, numbers)
+print("Product of numbers:", product)  # Output: 24
+
+# Example 2: Finding the maximum value in a list
+nums = [10, 20, 5, 40, 15]
+max_num = reduce(lambda x, y: x if x > y else y, nums)
+print("Maximum number:", max_num)  # Output: 40
+
+# Example 3: Using an initializer
+sum_with_initializer = reduce(lambda x, y: x + y, numbers, 10)
+print("Sum with initializer:", sum_with_initializer)  # Output: 20
+
+# Example 4: Define a standalone function
+def multiply(x, y):
+    return x * y
+
+# Use the function with reduce
+result = reduce(multiply, numbers)
+print("Product of numbers:", result)  # Output: 24
+```
+
+---
+
+# 60 - The `zip()` Function
+
+The `zip()` function combines **multiple iterables** into a single iterable of tuples. The i-th tuple contains the i-th element from each of the input iterables.
+
+**Syntax:** `zip(iterable1, iterable2, ...)`
+
+> `zip()` returns a **lazy iterator**. Convert to list, tuple, or dict for reuse. Avoid for very large datasets.
+
+```python
+# Two lists to zip
+names = ["Alice", "Bob", "Charlie"]
+scores = [85, 90, 78]
+
+# Zipping the lists together
+zipped = zip(names, scores)
+
+# Convert to a list of tuples
+result = list(zipped)
+print(result)
+
+# Iterating through zipped pairs
+for name, score in zip(names, scores):
+    print(f"{name} scored {score}")
+```
+
+**Output:**
+```
+[('Alice', 85), ('Bob', 90), ('Charlie', 78)]
+Alice scored 85
+Bob scored 90
+Charlie scored 78
+```
+
+---
+
+# 61 - List Comprehensions
+
+List comprehensions provide a **concise way to create lists** by applying an expression to each item in an iterable, with optional filtering. Also works on sets.
+
+**Syntax:**
+```
+List = [ expression for item in iterable ]
+List = [ expression for item in iterable if condition ]
+List = [ expression_if_true if condition else expression_if_false for item in iterable ]
+List = [ function(expression) for item in iterable ]
+```
+
+```python
+# Squaring numbers in a range
+squares = [x**2 for x in range(5)]
+print(squares)
+
+# Filtering even numbers
+list = [1,2,3,4,5,6]
+evens = [x for x in list if x % 2 == 0]
+print(evens)
+
+# Categorizing numbers as "Even" or "Odd"
+categories = ["Even" if x % 2 == 0 else "Odd" for x in range(5)]
+print(categories)
+
+# Applying a function to numbers
+def double(x):
+    return x * 2
+
+doubled = [double(x) for x in range(5)]
+print(doubled)
+```
+
+**Output:**
+```
+[0, 1, 4, 9, 16]
+[2, 4, 6]
+['Even', 'Odd', 'Even', 'Odd', 'Even']
+[0, 2, 4, 6, 8]
+```
+
+---
+
+# 62 - Tuple Comprehension
+
+Tuple comprehension uses a syntax similar to list comprehensions but **returns a generator object** — pass it to `tuple()` to get the actual tuple.
+
+**Syntax:**
+```
+Tuple = tuple( expression for item in iterable )
+Tuple = tuple( expression for item in iterable if condition )
+Tuple = tuple( expression_if_true if condition else expression_if_false for item in iterable )
+Tuple = tuple( function(expression) for item in iterable )
+```
+
+```python
+# Creating a tuple of squares
+squares = tuple(x**2 for x in range(5))
+print(squares)  # Output: (0, 1, 4, 9, 16)
+
+# Creating a tuple of even numbers
+evens = tuple(x for x in range(10) if x % 2 == 0)
+print(evens)  # Output: (0, 2, 4, 6, 8)
+
+# Categorizing numbers as "Even" or "Odd" in a tuple
+categories = tuple("Even" if x % 2 == 0 else "Odd" for x in range(5))
+print(categories)  # Output: ('Even', 'Odd', 'Even', 'Odd', 'Even')
+
+# Applying a function to numbers and storing results in a tuple
+def double(x):
+    return x * 2
+
+doubled = tuple(double(x) for x in range(5))
+print(doubled)  # Output: (0, 2, 4, 6, 8)
+```
+
+---
+
+# 63 - Dictionary Comprehensions
+
+Dictionary comprehensions provide a **concise way to create dictionaries**, optionally filtering items.
+
+**Syntax:**
+```
+dictionary = {key: expression for (key, value) in iterable.items()}
+dictionary = {key: expression for (key, value) in iterable.items() if conditional}
+dictionary = {key: (expr_if_true if condition else expr_if_false) for (key, value) in iterable.items()}
+dictionary = {key: function(value) for (key, value) in iterable.items()}
+```
+
+```python
+# Creating a dictionary with squares of values
+original = {'a': 2, 'b': 3, 'c': 4}
+squared_dict = {key + str(value): value ** 2 for key, value in original.items()}
+print(squared_dict)  # Output: {'a2': 4, 'b3': 9, 'c4': 16}
+
+# Filtering dictionary to include only even values
+filtered_dict = {key: value for key, value in original.items() if value % 2 == 0}
+print(filtered_dict)  # Output: {'a': 2, 'c': 4}
+
+# Categorizing values as "Even" or "Odd"
+categorized_dict = {key: "Even" if value % 2 == 0 else "Odd" for key, value in original.items()}
+print(categorized_dict)  # Output: {'a': 'Even', 'b': 'Odd', 'c': 'Even'}
+
+# Applying a function to values in the dictionary
+def double(x):
+    return x * 2
+
+doubled_dict = {key: double(value) for key, value in original.items()}
+print(doubled_dict)  # Output: {'a': 4, 'b': 6, 'c': 8}
+```
+
+---
+
+# 63 - Set Comprehensions
+
+Set comprehensions provide a **concise way to create sets**, similar to list comprehensions. Results are unique (no duplicates).
+
+**Syntax:**
+```
+new_set = {expression for item in iterable}
+new_set = {expression for item in iterable if conditional}
+new_set = {expr_if_true if conditional else expr_if_false for item in iterable}
+new_set = {function(item) for item in iterable}
+```
+
+```python
+# Original iterable
+numbers = [1, 2, 3, 4, 5]
+
+# 1 Basic set comprehension: squares
+squares = {n**2 for n in numbers}
+print("Squares:", squares)
+
+# 2 Set comprehension with condition: only even numbers
+even_squares = {n**2 for n in numbers if n % 2 == 0}
+print("Even squares:", even_squares)
+
+# 3 Conditional expression inside comprehension: label numbers as 'even' or 'odd'
+labels = {"even" if n % 2 == 0 else "odd" for n in numbers}
+print("Labels:", labels)
+
+# 4 Apply a function inside comprehension: convert numbers to strings
+str_numbers = {str(n) for n in numbers}
+print("String numbers:", str_numbers)
+```
+
+---
+
+# 64 - `enumerate()`
+
+The `enumerate()` function adds a **counter to an iterable** and returns it as an enumerate object — very useful when you need both the index and the value.
+
+**Syntax:** `enumerate(iterable, start=0)`
+- `iterable` — the sequence to loop through
+- `start` — starting index of the counter (default is `0`)
+
+```python
+fruits = ['apple', 'banana', 'cherry']
+for index, fruit in enumerate(fruits, start=1):
+    print(f"Index {index}: {fruit}")
+
+fruits = ['apple', 'banana', 'cherry']
+indexed_fruits = [(index, fruit) for index, fruit in enumerate(fruits)]
+print(indexed_fruits)
+
+numbers = [10, 20, 30]
+enumerated_numbers = list(enumerate(numbers))
+print(enumerated_numbers)
+```
+
+**Output:**
+```
+Index 1: apple
+Index 2: banana
+Index 3: cherry
+[(0, 'apple'), (1, 'banana'), (2, 'cherry')]
+[(0, 10), (1, 20), (2, 30)]
+```
+
+---
+
+# `globals()`
+
+`globals()` is used to **dynamically create global variables** (e.g. `player1`, `player2` …) and assign them values at runtime. Useful for handling multiple related variables without explicitly defining each one.
+
+> ⚠️ This approach reduces code readability and maintainability. A **better alternative** is using **dictionaries or lists** to store dynamically created objects — keeps data organized and avoids polluting the global namespace.
+
+```python
+# Using globals() to create variables from player1 to player4
+for i in range(1, 5):
+    globals()[f"player{i}"] = i * 10
+
+print("From globals():", player1)  # type: ignore
+
+# Using dictionary data structure to create variables from player1 to player4
+player = {f"player{i}": i * 100 for i in range(1, 5)}
+
+print("From dictionary:", player)
+print("From dictionary:", player["player1"])
+```
+
+**Output:**
+```
+From globals(): 10
+From dictionary: 100
+From dictionary: {'player1': 100, 'player2': 200, 'player3': 300, 'player4': 400}
+```
+
+---
+
+# 65 - The `time` Module
+
+The `time` module provides functions for **working with time-related operations**:
+- Accessing current time or the epoch reference point
+- Converting between time representations
+- Formatting time values using format codes (`Y`, `M`, `D`, `H`, `M`, `S`, `DW`, `DY`, `dst`)
+- Arithmetic functions like `sleep()` to pause execution
+
+### Time Functions Reference
+
+| What it Shows | Formula |
+|---|---|
+| The date since the epoch | `time.ctime(s)` |
+| The seconds passed since the epoch | `time.time()` |
+| Today's date | `time.ctime(time.time())` |
+| The whole structure of the universal GMT time | `time.gmtime()` |
+| The whole structure of the local time | `time.localtime()` |
+| A readable local or GMT time | `time.strftime(format, time.localtime())` |
+| A struct_time from a readable time | `time.strptime(date, format)` |
+| Time from a tuple to readable format | `time.asctime(Y,M,D,H,M,S,DW,DY,dst)` |
+| Seconds from epoch to the tuple's date | `time.mktime(Y,M,D,H,M,S,DW,DY,dst)` |
+
+### Time Format Codes
+
+| Code | Description |
+|---|---|
+| `%a` | Locale's abbreviated weekday name |
+| `%A` | Locale's full weekday name |
+| `%b` | Locale's abbreviated month name |
+| `%B` | Locale's full month name |
+| `%c` | Locale's appropriate date and time representation |
+| `%d` | Day of the month as a decimal number [01,31] |
+| `%f` | Microseconds as a decimal number [000000,999999] |
+| `%H` | Hour (24-hour clock) as a decimal number [00,23] |
+| `%I` | Hour (12-hour clock) as a decimal number [01,12] |
+| `%j` | Day of the year as a decimal number [001,366] |
+| `%m` | Month as a decimal number [01,12] |
+| `%M` | Minute as a decimal number [00,59] |
+| `%p` | Locale's equivalent of either AM or PM |
+| `%S` | Second as a decimal number [00,61] |
+
+```python
+import time
+
+print(time.ctime(0))               # Convert epoch time 0 to string
+print(time.ctime(1000206840))      # Convert a specific epoch time to string
+print(time.time())                 # Current epoch time
+print(time.ctime(time.time()))     # Convert current epoch time to string
+
+print(time.gmtime())               # UTC time as a struct_time object
+
+local_time = time.localtime()      # Get local time
+print(local_time)                  # Print local time as a struct_time object
+
+print(time.strftime("%D %H:%M:%S", time.localtime()))   # Format local time
+
+print(time.strptime("6, July, 2003, 5:30", "%d, %B, %Y, %H:%M"))  # Parse time
+
+tuple_time = (2003, 7, 6, 5, 30, 0, 0, 0, 0)
+print(time.asctime(tuple_time))   # Convert tuple to a readable string
+print(time.mktime(tuple_time))    # Convert tuple to epoch time
+```
+
+**Output:**
+```
+Thu Jan  1 01:00:00 1970
+Tue Sep 11 12:14:00 2001
+1735488011.3033726
+Sun Dec 29 17:00:11 2024
+time.struct_time(tm_year=2024, tm_mon=12, tm_mday=29, tm_hour=16, tm_min=0, tm_sec=11, tm_wday=6, tm_yday=364, tm_isdst=0)
+time.struct_time(tm_year=2024, tm_mon=12, tm_mday=29, tm_hour=17, tm_min=0, tm_sec=11, tm_wday=6, tm_yday=364, tm_isdst=1)
+12/29/24 17:00:11
+time.struct_time(tm_year=2003, tm_mon=7, tm_mday=6, tm_hour=5, tm_min=30, tm_sec=0, tm_wday=6, tm_yday=187, tm_isdst=-1)
+Mon Jul  6 05:30:00 2003
+1057469400.0
+```
+
+---
+
+# 66 - CPU-Bound vs I/O-Bound Tasks
+
+## CPU-Bound
+A **CPU-bound** task requires heavy computation from the CPU (math calculations, sorting algorithms, data processing). It keeps the CPU busy and involves little waiting for external resources. Used in scientific simulations, image processing, cryptographic operations.
+
+→ Use **multiprocessing** to leverage multi-core CPUs and achieve true parallelism.
+
+## I/O-Bound
+An **I/O-bound** task involves input/output operations (reading/writing files, network communication, database interactions). These tasks spend time **waiting** for I/O to complete rather than computing. Used in file processing, web scraping, database queries.
+
+→ Use **threading** to overlap I/O operations. However, threading may not give significant gains because the bottleneck is I/O speed, not CPU availability.
+
+---
+
+# 67 - Multi-Threading
+
+The `threading` module allows a program to perform **multiple tasks concurrently** (continues processing while waiting). Threads share the same memory space and are lighter than processes.
+
+> ⚠️ **GIL (Global Interpreter Lock)** — allows only **one thread to execute at a time**, even on multi-core systems. This means threading doesn't fully utilize multi-core CPUs for CPU-bound tasks. For CPU-bound work, use **multiprocessing** instead.
+
+Threads accept the `join()` method to wait for completion.
+
+```python
+import threading
+import time
+
+def eat_breakfast():
+    time.sleep(3)
+    print("You eat breakfast")
+
+def drink_coffee(number):
+    time.sleep(4)
+    print("You drank " + number + " coffees")
+
+def study(name):
+    time.sleep(5)
+    print(f"You finish studying {name}")
+
+x = threading.Thread(target=eat_breakfast) ; x.start() ; x.join()
+y = threading.Thread(target=drink_coffee, args=("2",)) ; y.start()
+threading.Thread(target=study, args=("bilal",)).start()
+
+print(threading.active_count())
+print(threading.enumerate())
+print(time.perf_counter())
+```
+
+```python
+import threading
+import time
+
+start_time = time.perf_counter()
+threads = []
+
+def counter(seconds):
+    print(f"sleep for {seconds} secs")
+    time.sleep(seconds)
+    print("done")
+
+for _ in range(2):
+    a = threading.Thread(target=counter, args=[3])
+    a.start()
+    threads.append(a)
+
+for i in threads:
+    i.join()
+
+end_time = time.perf_counter()
+print("Elapsed time:", end_time - start_time, "seconds")
+```
+
+**Output:**
+```
+You eat breakfast
+3
+[<_MainThread(MainThread, started 9680)>, <Thread(Thread-2 (drink_coffee), started 27380)>, <Thread(Thread-3 (study), started 26416)>]
+2241071.7353942
+You drank 2 coffees
+You finish studying bilal
+
+sleep for 3 secs
+sleep for 3 secs
+done
+done
+Elapsed time: 3.0016264002770185 seconds
+```
+
+---
+
+# 67-A - Daemon Threads
+
+**Daemon threads** run in the background and **do not prevent the main program from exiting**. When all non-daemon threads complete, the program exits — regardless of whether daemon threads are still running. Used for monitoring, periodic cleanup, or non-critical background operations.
+
+```python
+import time
+import threading
+
+def timer():
+    count = 0
+    while True:
+        time.sleep(1)
+        count += 1
+        print(f"logged in {count} secs")
+
+threading.Thread(target=timer, daemon=True).start()
+x = input("enter x: \n")
+```
+
+**Output:**
+```
+enter x:
+logged in 1 secs
+logged in 2 secs
+logged in 3 secs
+...
+logged in 10 secs
+```
+*(timer keeps running until the user provides input, then the program exits)*
+
+---
+
+# 68 - Multi-Processing
+
+The `multiprocessing` module runs **multiple processes concurrently**, where each process has its **own memory space**. This bypasses the GIL, allowing Python code to run independently across multiple CPU cores.
+
+Use for CPU-bound tasks. Accepts the `join()` method.
+
+```python
+from multiprocessing import Process, cpu_count
+import time
+
+start = time.perf_counter()
+
+def counter(num):
+    count = 0
+    while count < num:
+        count += 1
+
+def main():
+    print("cpu count:", cpu_count())
+    a = Process(target=counter, args=(50000000,)) ; a.start()
+    b = Process(target=counter, args=(50000000,)) ; b.start()
+    print("processing...")
+    a.join()
+    b.join()
+    print("Done!")
+    finish = time.perf_counter()
+    print("finished in:", finish - start, "seconds")
+
+if __name__ == '__main__':
+    main()
+```
+
+**Output:**
+```
+cpu count: 8
+processing...
+Done!
+finished in: 1.8089666003361344 seconds
+```
+
+```python
+import multiprocessing
+import time
+
+start = time.perf_counter()
+
+def sleep(sec):
+    print(f"sleep for {sec} seconds")
+    time.sleep(sec)
+    print(f"done sleeping for {sec} ")
+
+if __name__ == '__main__':
+    list = []
+    for _ in range(50):
+        a = multiprocessing.Process(target=sleep, args=[2])
+        a.start()
+        list.append(a)
+    for i in list:
+        i.join()
+    finish = time.perf_counter()
+    print(f"{round(finish - start, 2)} secs")
+```
+
+**Output:**
+```
+done sleeping for 2
+done sleeping for 2
+3.15 secs
+```
+
+---
+
+# 69 - The `concurrent.futures` Module
+
+The `concurrent.futures` module provides **`ThreadPoolExecutor`** or **`ProcessPoolExecutor`** — a high-level interface for managing a pool of threads or processes to execute tasks asynchronously.
+
+Useful when you want to **assign different arguments to a function**.
+
+- Use `submit(func, args)` to submit tasks to the executor
+- Use `.result()` to get the return value
+- You can also use `.map()` but it accepts only 2 iterables
+
+```python
+import concurrent.futures
+import time
+
+start_time = time.perf_counter()
+
+def task(n, sec):
+    print(f"Task {n} starting...")
+    time.sleep(sec)  # Simulate a 2-second task
+    print(f"Task {n} finished.")
+    return f"Result of task {n}"
+
+with concurrent.futures.ThreadPoolExecutor() as executor:
+    future1 = executor.submit(task, 1, 3)
+
+    for _ in range(2):
+        future2 = executor.submit(task, 2, 3)
+
+    secs = [5, 3, 1]                                          # (1)
+    future3 = [executor.submit(task, 3, sec) for sec in secs]
+    for i in concurrent.futures.as_completed(future3):
+        print(i.result())
+
+    print(f"Results:, {future1.result()}, {future2.result()}")
+
+end_time = time.perf_counter()
+print("Elapsed time:", end_time - start_time, "seconds")
+```
+
+```python
+import concurrent.futures
+import time
+
+start_time = time.perf_counter()
+
+def task(sec):
+    print(f"Task {sec} starting...")
+    time.sleep(sec)  # Simulate a 2-second task
+    print(f"Task {sec} finished.")
+    return f"Result of task {sec}"
+
+with concurrent.futures.ThreadPoolExecutor() as executor:
+    secs = [5, 3, 1]
+    future3 = executor.map(task, secs)
+    for i in future3:
+        print(i)
+
+end_time = time.perf_counter()
+print("Elapsed time:", end_time - start_time, "seconds")
+```
+
+```python
+import concurrent.futures
+import time
+
+def sleep(sec):
+    print(f"Sleeping for {sec} seconds")
+    time.sleep(sec)
+    return f"Done sleeping for {sec} seconds"
+
+if __name__ == "__main__":
+    start_time = time.perf_counter()
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        ex1 = executor.submit(sleep, 3)
+
+        for _ in range(10):
+            ex2 = executor.submit(sleep, 2)
+
+        futures = [executor.submit(sleep, 1) for _ in range(2)]
+        for x in concurrent.futures.as_completed(futures):
+            print(x.result())
+
+        print(f" {ex1.result()} \n {ex2.result()} ")
+
+    end_time = time.perf_counter()
+    print(f"Elapsed time: {end_time - start_time} seconds")
+```
+
+---
+
+## Comparison: Threading vs Multiprocessing vs concurrent.futures
+
+| Feature | `threading` | `multiprocessing` | `concurrent.futures` |
+|---|---|---|---|
+| I/O-bound | ✅ (best) | | ✅ |
+| CPU-bound | | ✅ (best) | ✅ |
+| `join()` | ✅ | ✅ | |
+| `for` loop | ✅ (best) | ✅ (best) | ✅ |
+| Different args per task | | | ✅ 
