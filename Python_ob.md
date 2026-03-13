@@ -2399,33 +2399,59 @@ Error: Can't instantiate abstract class Shape without an implementation for abst
 
 ### How Python Tracks Abstract Methods
 
-Each class inheriting from `ABC` has `__abstractmethods__` — a frozenset of unimplemented abstract methods. If non-empty → class is abstract → instantiation raises `TypeError`.
+**Definition**
+
+In Python, when using abstract base classes from abc, every class has a `__abstractmethods__` attribute, which is a `frozenset` containing the names of abstract methods that are not yet implemented.
+
+- If `class A(ABC)` has a **non-empty `__abstractmethods__` set**, the class is considered **abstract**, and attempting to instantiate it (`A()`) raises a `TypeError`.
+    
+- If `A.__abstractmethods__` is **empty**, the class is **concrete**, and `A()` can be instantiated without error.
+    
+
+The same rule applies to subclasses:
+
+- If `class B(A)` has a **non-empty `__abstractmethods__`**, it means **not all abstract methods inherited from `A` have been implemented**, so `B()` raises a `TypeError`.
+    
+- If `B.__abstractmethods__` is **empty**, it means **all inherited abstract methods have been implemented**, and the class can be instantiated normally.
 
 ```python
 from abc import ABC, abstractmethod
 
+# Base class with an abstract method
 class Animal(ABC):
+
     @abstractmethod
     def make_sound(self):
-        """Abstract method to be implemented by subclasses"""
+        """Abstract method that must be implemented by subclasses"""
         pass
 
     def eat(self):
+        """Normal method"""
         print("Eating food")
 
+# Subclass implementing the abstract method
 class Dog(Animal):
+
     def make_sound(self):
         return "Bark"
 
-# Inspect
+# Inspect the base class
 print("Animal.__abstractmethods__:", Animal.__abstractmethods__)
-# frozenset({'make_sound'})
-print("Animal.make_sound.__isabstractmethod__:", True)
-print("Animal.eat.__isabstractmethod__:", False)
+
+# Inspect the method objects
+make_sound_method = Animal.__dict__['make_sound']
+eat_method = Animal.__dict__['eat']
+
+print("Animal.make_sound.__isabstractmethod__:", getattr(make_sound_method, "__isabstractmethod__", False))
+print("Animal.eat.__isabstractmethod__:", getattr(eat_method, "__isabstractmethod__", False))
+
+# Inspect the subclass
 print("Dog.__abstractmethods__:", Dog.__abstractmethods__)
-# frozenset()
-print(Dog().make_sound())
-# Dog makes sound: Bark
+
+# Test instantiation
+# Animal()  # This would raise TypeError
+dog = Dog()
+print("Dog makes sound:", dog.make_sound())
 ```
 
 **Output:**
