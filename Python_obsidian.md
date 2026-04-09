@@ -3142,6 +3142,12 @@ print(sorted(words, key=len))  # Output: ['apple', 'grape', 'orange']
 sorted_numbers_desc = sorted(numbers, reverse=True)
 print(sorted_numbers_desc)  # Output: [9, 5, 4, 3, 1, 1]
 
+artifacts = [
+	{"name": "Crystal Orb", "power": 85, "type": "orb"},
+	{"name": "Fire Staff", "power": 92, "type": "staff"},
+]
+sorted(artifacts, key=lambda a: a["power"], reverse=True)
+
 #sort()
 numbers = [3, 1, 4, 1, 5, 9]
 numbers.sort()
@@ -3153,6 +3159,57 @@ print(words)  # Output: ['apple', 'grape', 'orange']
 
 numbers.sort(reverse=True)
 print(numbers)  # Output: [9, 5, 4, 3, 1, 1]
+```
+
+Here is everything combined into one clean script:
+
+```python
+# 1. List
+a = [5, 2, 9, 1]
+b_list = sorted(a)
+
+print("List original:", a)
+print("List sorted:", b_list)
+print()
+
+# 2. Tuple
+t = (4, 1, 7)
+b_tuple = sorted(t)
+
+print("Tuple sorted:", b_tuple)
+print()
+
+# 3. String
+s = "cab"
+b_string = sorted(s)
+
+print("String sorted:", b_string)
+print()
+
+# 4. Set
+st = {10, 3, 7}
+b_set = sorted(st)
+
+print("Set sorted:", b_set)
+print()
+
+# Key idea
+print("Original types unchanged, sorted() always returns a new LIST.")
+```
+
+The exact output will be:
+
+```
+List original: [5, 2, 9, 1]
+List sorted: [1, 2, 5, 9]
+
+Tuple sorted: [1, 4, 7]
+
+String sorted: ['a', 'b', 'c']
+
+Set sorted: [3, 7, 10]
+
+Original types unchanged, sorted() always returns a new LIST.
 ```
 
 ---
