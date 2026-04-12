@@ -3945,3 +3945,414 @@ if __name__ == "__main__":
 | `join()` | ✅ | ✅ | |
 | `for` loop | ✅ (best) | ✅ (best) | ✅ |
 | Different args per task | | | ✅ 
+
+---
+# Callable
+
+`from collections.abc import Callable` imports a **type hint (not a runtime tool)** that represents “a callable object”.
+# What it is
+
+### `collections.abc.Callable`
+
+It is an **abstract base class (ABC)** used for **type checking** functions and callable objects.
+
+It answers this question:
+
+> “Can this object be called like a function?”
+
+## What counts as a Callable?
+
+Anything you can use with `()`:
+
+### ✔ Functions
+
+```python
+def f(x): 
+    return x + 1
+```
+
+### ✔ Lambdas
+
+```python
+lambda x: x * 2
+```
+
+### ✔ Objects with `__call__`
+
+```python
+class A:
+    def __call__(self, x):
+        return x
+```
+
+## Why we use it
+
+It is used for **type hints**, not execution.
+
+Example:
+
+```python
+from collections.abc import Callable
+
+def apply(func: Callable, value: int) -> int:
+    return func(value)
+```
+
+This means:
+
+> “func must be something I can call like a function.”
+
+## Important detail (modern Python)
+
+There are **two Callable sources**:
+
+## 1. Recommended (modern typing)
+
+```python
+from typing import Callable
+```
+
+or in newer Python versions:
+
+```python
+from collections.abc import Callable
+```
+
+### Difference:
+
+| Import                     | Purpose                        |
+| -------------------------- | ------------------------------ |
+| `typing.Callable`          | older typing system            |
+| `collections.abc.Callable` | runtime-compatible ABC version |
+
+---
+# Higher-order function
+
+A **higher-order function** is a function that does at least one of these:
+## 1. Takes a function as an argument
+
+Example:
+
+```python
+def apply(func, value):
+    return func(value)
+```
+
+Usage:
+
+```python
+def square(x):
+    return x * x
+
+apply(square, 5)  # 25
+```
+
+Here:
+
+- `apply` is higher-order
+- because it **receives a function (`square`)**
+
+## 2. Returns a function
+
+Example:
+
+```python
+def multiplier(n):
+    def multiply(x):
+        return x * n
+    return multiply
+```
+
+Usage:
+
+```python
+double = multiplier(2)
+print(double(10))  # 20
+```
+
+Here:
+
+- `multiplier` is higher-order
+- because it **returns a function (`multiply`)**
+
+## 3. Can do both
+
+```python
+def compose(f, g):
+    return lambda x: f(g(x))
+```
+
+This takes functions and returns a new function.
+
+## Why this matters
+
+Higher-order functions let you:
+
+- build **reusable logic**
+- create **function pipelines**
+- implement **decorators**
+- do **functional programming patterns**
+## Real Python examples
+
+### `sorted()` with `key=`
+
+```python
+sorted(words, key=len)
+```
+
+→ `len` is a function passed in
+
+### `map()`
+
+```python
+map(lambda x: x * 2, [1, 2, 3])
+```
+
+→ takes a function
+
+### `filter()`
+
+```python
+filter(lambda x: x > 0, numbers)
+```
+
+## Simple mental definition
+
+> A higher-order function is a function that **treats functions like data** — either by taking them in, returning them, or both.
+
+---
+
+# Functions are first-class citizens
+
+When we say **functions are first-class citizens in Python**, we mean they behave like any other object (like ints, strings, lists, dicts).  
+Anything you can do with normal objects, you can do with functions.
+
+There are 5 main properties.
+## 1) Functions can be assigned to variables
+
+```python
+def greet(name):
+    return f"Hello {name}"
+
+say_hi = greet
+print(say_hi("Ali"))
+```
+
+You didn’t copy the function — you created another reference to the same object.
+
+This proves functions are **values**.
+## 2) Functions can be stored in data structures
+
+```python
+def add(x): return x + 1
+def double(x): return x * 2
+
+operations = [add, double]
+print(operations)  # 6
+```
+
+Functions live inside lists, dicts, tuples, etc.
+## 3) Functions can be passed as arguments
+
+This creates **higher-order functions**.
+
+```python
+def apply(func, value):
+    return func(value)
+
+apply(len, "magic")  # 5
+```
+
+You passed a function just like you’d pass a number.
+## 4) Functions can be returned from functions
+
+```python
+def make_multiplier(n):
+    def multiply(x):
+        return x * n
+    return multiply
+
+double = make_multiplier(2)
+double(10)  # 20
+```
+
+Functions can be **created dynamically** and returned.
+## 5) Functions exist at runtime (they are objects)
+
+You can inspect them:
+
+```python
+print(type(len))
+```
+
+Output:
+
+```
+<class 'builtin_function_or_method'>
+```
+
+Functions have:
+
+- attributes
+- identity
+- memory address
+- can be passed around
+
+They are real objects in memory.
+
+## The big picture
+
+Because functions are first-class objects, Python supports:
+
+- higher-order functions (`map`, `filter`, `sorted`)
+- decorators    
+- callbacks
+- functional programming patterns
+## Short definition to remember
+
+> Functions are first-class citizens because they can be treated like any other value: stored, passed, returned, and manipulated at runtime.
+
+---
+# Decorator
+
+A decorator is a function that takes another function, adds behavior to it, and returns a new function. The original function’s code stays the same, but what happens when you call it changes.
+
+## Start **without** the `@` syntax:
+
+```python
+def outerfunc(func):
+    def innerfunc():
+        print("Before")
+        func()
+        print("After")
+    return innerfunc
+
+def great():
+    print("Hello")
+
+say_hi = outerfunc(great)
+say_hi()
+```
+
+What happens here:
+
+1. `great` is created normally.
+    
+2. We pass that function into `outerfunc`.
+    
+3. Inside the decorator, a new function called `innerfunc` is created.
+    
+4. `innerfunc` remembers the original function (`func`) thanks to a closure.
+    
+5. The decorator returns `innerfunc`.
+    
+6. The name `say_hi` now refers to `innerfunc`, not the original function.
+    
+
+So calling `say_hi()` actually calls `innerfunc`, which calls the original function inside it.
+
+That’s why the output becomes:
+
+```
+Before
+Hello
+After
+```
+
+The original function didn’t change, but its behavior did.
+## Now the `@` syntax is just a shortcut.
+
+This:
+
+```python
+@outerfunc
+def great():
+    print("Hello")
+```
+
+is automatically rewritten by Python as:
+
+```python
+def great():
+    print("Hello")
+
+great = outerfunc(great)
+```
+
+So when Python sees `@outerfunc`, it:
+
+1. Creates the function object `great`
+    
+2. Passes it to `outerfunc`
+    
+3. Replaces `great` with whatever the decorator returns
+    
+
+Inside the decorator:
+
+- `func` becomes the original `great`
+    
+- `innerfunc` is created and remembers `func`
+    
+- `innerfunc` is returned
+    
+- `great` now points to `innerfunc`
+    
+
+When you call `great()`:
+
+- You are really calling `innerfunc()`
+    
+- `innerfunc()` runs code before and after the original function
+    
+
+Mental model:
+
+```
+great → innerfunc → original great
+```
+
+A decorator is simply a function that wraps another function to add extra behavior around it.
+## Notice:
+
+A decorator is executed **immediately when Python defines the function**, not when you call it.
+
+It takes the original function, builds an `innerfunc`, and replaces the original name with it.
+
+Simple example:
+
+```python
+def outerfunc(func):
+    def innerfunc():
+        print("Before")
+        func()
+        print("After")
+    return innerfunc
+
+@outerfunc
+def great():
+    print("Hello")
+
+great()
+```
+
+## What happens:
+
+When Python sees `@outerfunc`, it instantly does:
+
+```python
+great = outerfunc(great)
+```
+
+So:
+
+- `outerfunc` runs immediately
+    
+- it creates `innerfunc`
+    
+- `innerfunc` wraps `great`
+    
+- `great` becomes `innerfunc`
+    
+
+---
