@@ -1692,6 +1692,1703 @@ You should enter numbers only: 2
 
 ---
 
+# 40 — Module
+
+A **module** is a Python file that contains reusable code — functions, classes, and variables — designed to organize and simplify your programs.
+
+- **Standard** — Built-in modules like `math`, `os`.
+- **Third-party** — Installed via `pip`.
+- **Custom** — Created by you.
+
+```python
+# "Test1.py" file
+def function(number):
+    print(f"From Test{number}: {number * 10}")
+
+function(1)  # Output: From Test1: 10
+```
+
+```python
+# "Test2.py" file
+import Test1
+
+Test1.function(2)
+# Output: From Test1: 10  # From running the Test1 Code
+# Output: From Test2: 20  # From the current Code (Test2)
+```
+
+**Output:**
+```
+From Test1: 10
+From Test2: 20
+```
+
+---
+
+# 40-A — `if __name__ == "__main__"`
+
+This conditional checks whether the script is being **run directly** or **imported as a module**.
+
+- When run directly → `__name__` is set to `"__main__"`.
+- When imported → `__name__` is set to the module's file name.
+
+```python
+# "Test1.py" file
+def greet():
+    print("Hello from Test1!")
+
+if __name__ == "__main__":
+    greet()
+    print(f"Script is being run directly, in \"{__name__}\" file")
+else:
+    print(f"This Code is Imported to {__name__} file")
+```
+
+**When run directly:**
+```
+Hello from Test1!
+Script is being run directly, in "__main__" file
+```
+
+**When imported:**
+```
+This Code is Imported to Test1 file
+Hello from Test1!
+```
+
+---
+
+# 41 — Object-Oriented Programming (OOP)
+
+**OOP** is a programming paradigm that organizes code into **objects**, which combine data (attributes) and functions (methods).
+
+- **Class** — A blueprint/template that defines the structure and behavior of objects. It specifies attributes (data/properties) and methods (functions/behaviors).
+- **Object** — A specific instance of a class. Each object has a unique memory location and its own set of attribute values.
+
+## Class Variables
+
+Shared among **all instances** of a class. Defined outside any method. Accessed via the class name or `self`, and modified using a `@classmethod`.
+
+## `__init__` (Constructor)
+
+Automatically called during object creation to initialize attributes. Cannot use `return`.
+
+## Attributes (Instance Variables)
+
+Unique to individual objects. Initialized in `__init__` to store object-specific data. Can be modified after creation.
+
+## Methods
+
+Functions within a class that define behaviors. The first parameter `self` refers to the calling object.
+
+## Full Example:
+
+```python
+class Car:
+    wheels = 4  # Class variable
+
+    def __init__(self, make, model, year):
+        self.make = make    # Instance variable
+        self.model = model
+        self.year = year
+        self.is_car = True
+        print("Object created")
+
+    def drive(self):
+        return f"The {self.make} {self.model} is now driving with {Car.wheels} wheels"
+
+car1 = Car("Toyota", "Corolla", 2020)
+car2 = Car("Honda", "Civic", 2021)
+
+print(car2.model)     # Civic
+print(car2.is_car)    # True
+print(car1.drive())   # The Toyota Corolla is now driving with 4 wheels
+car2.wheels = 3       # Change instance class variable value
+print(car2.drive())   # The Honda Civic is now driving with 3 wheels
+```
+
+**Output:**
+
+```
+Object created
+Object created
+Civic
+True
+The Toyota Corolla is now driving with 4 wheels
+The Civic is now driving with 3 / 4 wheels
+```
+
+## `self` — What It Is and Why It Matters
+
+`self` refers to the **specific instance** of the object being created or modified. It allows each object to store its own attributes and access its own methods.
+
+Without `self`, changes would apply only to temporary local variables — the object would not remember its updated values.
+
+```python
+class Plant:
+    def __init__(self, name, height, age):
+        self.name = name
+        height = height + 10  # ❌ local only — NOT stored on object
+        self.age = age
+        print(f"{self.name} grew to {height}cm")
+
+rose = Plant("rose", 25, 30)
+
+if rose.height > 30:  # ❌ ERROR — height was never assigned to self
+    print(f"{rose.name} is tall!")
+```
+
+**Output:**
+
+```
+rose grew to 35cm
+AttributeError: 'Plant' object has no attribute 'height'
+```
+
+## How Objects Are Stored
+
+Instance data is stored in memory using an internal dictionary (`__dict__`). When you do `self.attribute = value`, Python inserts an entry into the object's `__dict__`.
+
+```python
+class Book:
+    def __init__(self, title, pages):
+        self.title = title
+        self.pages = pages
+
+b = Book("Python Basics", 200)
+print(b.__dict__)            # {'title': 'Python Basics', 'pages': 200}
+print(b.title)               # Python Basics
+print(b.__dict__['title'])   # Python Basics
+```
+
+### Using the Class Name Instead of `self`
+
+Use the class name when working with **class-level data** shared by all instances.
+
+```python
+class Car:
+    total = 0  # class variable (shared)
+
+    def __init__(self):
+        Car.total += 1
+
+    def show():
+        print(f"There are {Car.total} cars")
+
+car_1 = Car()
+car_2 = Car()
+car_3 = Car()
+Car.show()
+```
+
+**Output:**
+```
+There are 3 cars
+```
+
+---
+
+# Protected Attributes
+
+A **single underscore** prefix (e.g., `_age`) is a convention indicating the attribute is for **internal use only**. It is NOT enforced by Python — external code can still access it.
+
+```python
+class Plant:
+    def __init__(self, name, age):
+        self.name = name
+        self._age = age   # protected attribute
+
+    def grow(self):
+        self._age += 1
+        print(f"{self.name} is now {self._age} days old.")
+
+rose = Plant("Rose", 30)
+print(rose.name)    # Output: Rose
+print(rose._age)    # Output: 30 (accessible but not recommended)
+rose._age = 14      # This takes effect
+rose.grow()         # Output: Rose is now 15 days old.
+```
+
+---
+
+# Name Mangling
+
+A **double underscore** prefix (e.g., `__age`) triggers **name mangling** — Python renames the attribute internally to `_ClassName__age`. This prevents direct access by the original name from outside the class.
+
+```python
+class Plant:
+    def __init__(self, name, age):
+        self.name = name
+        self.__age = age  # double underscore
+
+    def grow(self):
+        self.__age += 1
+        print(f"{self.name} is now {self.__age} days old.")
+
+rose = Plant("Rose", 30)
+# print(rose.__age)         # AttributeError
+rose._Plant__age = 14       # Accessible via mangled name (not recommended)
+print(rose._Plant__age)     # Output: 30
+rose.grow()
+```
+
+---
+
+# 56 — Inheritance (OOP)
+
+**Inheritance** allows one class (child/subclass) to inherit the attributes and methods of another class (parent/superclass). The child class can extend or override the parent's behavior.
+
+**Types of inheritance:**
+- **Single** — Child inherits from one parent.
+- **Multiple** — Child inherits from multiple parents.
+- **Multilevel** — Chain of inheritance (A → B → C).
+- **Hierarchical** — Multiple children from one parent.
+- **Hybrid** — Combination of types.
+
+```python
+# Parent class
+class Animal:
+    def __init__(self, name):
+        self.name = name
+        self.animal = "Animal"
+
+    def Animal_speak(self):
+        return f"The {self.animal} makes a sound."
+
+# Child class
+class Dog(Animal):
+    def Dog_speak(self):
+        return f"{self.name} barks."
+
+# Another child class
+class Cat(Animal):
+    def Cat_speak(self):
+        return f"{self.name} meows."
+
+dog = Dog("Buddy")
+cat = Cat("Whiskers")
+
+print(dog.Dog_speak())       # Buddy barks.
+print(cat.Cat_speak())       # Whiskers meows.
+print(cat.Animal_speak())    # The Animal makes a sound.
+```
+
+**Output:**
+```
+Buddy barks.
+Whiskers meows.
+The Animal makes a sound.
+```
+
+---
+# 47 — The `super()` Function (OOP)
+
+`super()` accesses methods and attributes of a **parent class** without directly naming it. It is especially useful when a child class overrides a method but still needs the parent’s behavior.
+## Basic Example
+
+```python
+class Parent:
+    def __init__(self, name):
+        self.name = name
+
+    def greet(self):
+        print(f"Hello, my name is {self.name}.")
+
+class Child(Parent):
+    def __init__(self, name, age):
+        super().__init__(name)  # Call Parent's __init__
+        self.age = age
+
+    def greet(self):
+        super().greet()  # Call Parent's greet
+        print(f"I am {self.age} years old.")
+
+child = Child("Alice", 12)
+child.greet()
+```
+
+**Output:**
+
+```
+Hello, my name is Alice.
+I am 12 years old.
+```
+
+## Grandchild Example (calling parent constructor explicitly)
+
+You can also create a **grandchild class**, and still call the parent constructor directly.
+
+This shows how inheritance chains work beyond one level.
+
+```python
+class Parent:
+    def __init__(self, name):
+        self.name = name
+
+class Child(Parent):
+    def __init__(self, name, age):
+        super().__init__(name)
+        self.age = age
+
+class Grand_Child(Child):
+    def __init__(self, name, height):
+        Parent.__init__(self, name)  # Call Parent's __init__ directly
+        self.height = height
+
+    def greet(self):
+        print(f"I am {self.height} cm.")
+
+child = Grand_Child("Alice", 12)
+child.greet()
+```
+
+**Output:**
+
+```
+I am 12 cm.
+```
+
+## Key idea
+
+|Method|Meaning|
+|---|---|
+|`super()`|Follows inheritance chain automatically (recommended)|
+|`Parent.__init__()`|Direct call to a specific class (manual control)|
+
+`super()` is safer in complex inheritance trees, while direct calls give explicit control but can break MRO logic in multiple inheritance cases.
+
+> **Note:** A child class cannot pick and choose which arguments to pass from a parent's constructor. If `super().__init__()` is called, all required parent parameters must be satisfied. To handle cases where the child only cares about some attributes, provide **default values** for unused parameters.
+
+```python
+class Parent:
+    def __init__(self, name, age, role):
+        self.name = name
+        self.age = age
+        self.role = role
+
+class Child(Parent):
+    def __init__(self, name):
+        # Provide default values for other parameters
+        super().__init__(name, age=0, role="unknown")
+        print(f"Name: {self.name}, Age: {self.age}, Role: {self.role}")
+
+c = Child("Alice")
+```
+
+---
+# 50 — The Static Method (OOP)
+
+A `@staticmethod` is defined within a class but **not tied to a specific instance or the class itself**. It cannot access `self` or `cls`. Used for utility/helper functions that are independent of class data.
+
+```python
+class Calculator:
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+# Call directly on the class
+print(Calculator.add(5, 3))  # Output: 8
+
+# Also accessible through an instance
+calc = Calculator()
+print(calc.add(7, 2))  # Output: 9
+```
+
+---
+# 49 — The Class Method (OOP)
+
+A `@classmethod` is bound to the **class itself** rather than to instances. It takes `cls` as its first parameter instead of `self`.
+
+**Use cases:**
+1. Modify shared class variables (changes apply to all instances).
+2. Alternative constructors — initialize a class in different ways.
+
+> `self` is NOT accessible inside a `@classmethod`.
+
+### (*1) Using `@classmethod` — shared counter
+
+```python
+class Example:
+
+    count = 0
+
+	def __init__(self, name):
+		self.name = name
+
+    @classmethod
+    def increment_count(cls):
+        cls.count += 1
+        return cls.count
+
+print(f"count = {Example.increment_count()}")    # count = 1
+print(f"count = {Example.increment_count()}")     # count = 2
+print(f"count = {Example.increment_count()}")     # count = 3
+
+example_instance2 = Example("Alice")
+print(f"count = {example_instance2.increment_count()}")  # count = 4
+```
+
+### Not Using `@classmethod` — per-instance counter
+
+```python
+class Example:
+    count = 0
+
+    def increment_count(self):
+        self.count += 1
+        return self.count
+
+example_instance1 = Example()
+print(f"count = {Example().increment_count()}")       # count = 1
+print(f"count1 = {example_instance1.increment_count()}")  # count1 = 1
+print(f"count1 = {example_instance1.increment_count()}")  # count1 = 2
+
+example_instance2 = Example()
+print(f"count2 = {example_instance2.increment_count()}")  # count2 = 1
+```
+
+### (*2) Alternative Constructor
+
+```python
+class Person:
+    current_year = 2000  # Class attribute
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.current_year = 2024
+
+    @classmethod
+    def from_birth_year(cls, name, age):
+        current_year = 2024
+        birth_year = current_year - age
+        return cls(name, age, birth_year)
+        # return Person(name, age, birth_year) <-- this also works
+
+Person("Alice", 40, 1984)
+p = Person.from_birth_year("Alice", 40)
+print(p.birth_year)
+```
+
+**Output:**
+```
+My name is Alice, i'm 40, i was born in 1984
+My name is Alice, i'm 40, i was born in 1984
+1984
+```
+
+### (*3) `self` Not Accessible in `@classmethod`
+
+```python
+class Person:
+    current_year = 2000
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.current_year = 2024
+
+    @classmethod
+    def from_birth_year(cls, name, birth_year):
+        age = self.current_year - birth_year  # ❌ NameError
+        return cls(name, age)
+
+try:
+    Person.from_birth_year(name="Alice", birth_year=1994)
+except NameError:
+    print("Error: name 'self' is not defined ('self' is not accessible in classmethod)")
+```
+
+**Output:**
+```
+Error: name 'self' is not defined ('self' is not accessible in classmethod)
+```
+
+### Why `cls` Matters (vs. Hard-coding Class Name)
+
+Using `cls` preserves correct inheritance — without it, subclasses are forced to share the base class's state.
+
+```python
+# ❌ Hard-coded (breaks inheritance)
+class Base:
+    count = 0
+    @classmethod
+    def inc(cls):
+        Base.count += 1  # hard-coded
+
+class Child(Base):
+    count = 10
+
+Child.inc()
+print(Base.count)   # 1
+print(Child.count)  # 10  (unchanged!)
+
+# ✅ Using cls (correct)
+class Base:
+    count = 0
+    @classmethod
+    def inc(cls):
+        cls.count += 1  # dynamic
+
+class Child(Base):
+    count = 10
+
+Child.inc()
+print(Base.count)   # 0
+print(Child.count)  # 11
+```
+
+---
+
+# 46 — Method Chaining (OOP)
+
+**Method chaining** (fluent interface) allows multiple methods to be called on the same object in a single line. Each method returns `self` to enable chaining.
+
+```python
+class Calculator:
+    def __init__(self, value=0):
+        self.value = value
+
+    def add(self, num):
+        self.value += num
+        return self  # Return the object for chaining
+
+    def multiply(self, num):
+        self.value *= num
+        return self
+
+    def divide(self, num):
+        if num != 0:
+            self.value /= num
+        return self
+
+    def result(self):
+        return self.value
+
+calc = Calculator()
+result = calc.add(10).multiply(5).divide(2).result()
+print(f"Result: {result}")  # Output: Result: 25.0
+```
+
+**Output:**
+```
+Result: 25.0
+```
+
+> `self` is what makes method chaining work: each call receives the same object with its updated state. Without `self`, changes would only exist temporarily inside the method.
+
+---
+
+# 48 — Abstract Class and Method (OOP)
+
+**Abstract classes** contain one or more abstract methods (templates with no implementation). They **cannot be instantiated directly (if they have @abstractmethod)** — subclasses must provide concrete implementations.
+
+To define an abstract class: import `ABC` from the `abc` module and use `@abstractmethod`.
+
+```python
+from abc import ABC, abstractmethod
+
+class Shape(ABC):  # Abstract base class
+    @abstractmethod
+    def calculate_area(self):
+        pass
+
+class Circle(Shape):  # Subclass implementing the abstract method
+    def __init__(self, radius):
+        self.radius = radius
+
+    def calculate_area(self, pi):
+        return pi * (self.radius ** 2)
+
+circle = Circle(5)
+print("Circle Area:", circle.calculate_area(3.14159))
+
+try:
+    shape = Shape()  # Cannot instantiate abstract class
+except Exception as e:
+    print(f"Error: {e}")
+```
+
+**Output:**
+```
+Circle Area: 78.53975
+Error: Can't instantiate abstract class Shape without an implementation for abstract method 'calculate_area'
+```
+
+### How Python Raises Errors for Abstract Base Classes
+
+In Python When a method is decorated with `@abstractmethod`, Python marks it with `__isabstractmethod__ = True` and adds it to the class’s `__abstractmethods__` set. During instantiation, Python checks this set: if it is non-empty, the class is considered abstract, and attempting to create an instance from the Abstract class itself raises a TypeError. If the class has no abstract methods, the `__abstractmethods__` set is empty, and Python allows instantiation. So, ABCs themselves are not inherently blocked from instantiation; it is the presence of abstract methods that enforces the error, ensuring that subclasses implement all required behavior before they can be instantiated.
+### How Python Tracks Abstract Methods
+
+**Definition**
+
+In Python, when using abstract base classes from abc, every class has a `__abstractmethods__` attribute, which is a `frozenset` containing the names of abstract methods that are not yet implemented.
+
+- If `class A(ABC)` has a **non-empty `__abstractmethods__` set**, the class is considered **abstract**, and attempting to instantiate it (`A()`) raises a `TypeError`.
+    
+- If `A.__abstractmethods__` is **empty**, the class is **concrete**, and `A()` can be instantiated without error.
+
+In the other-hand for the subclasses:
+
+- If `class B(A)` has a **non-empty `__abstractmethods__`**, it means **not all abstract methods inherited from `A` have been implemented**, so `B()` raises a `TypeError`.
+    
+- If `B.__abstractmethods__` is **empty**, it means **all inherited abstract methods have been implemented**, and the class can be instantiated normally.
+
+```python
+from abc import ABC, abstractmethod
+
+# Base class with an abstract method
+class Animal(ABC):
+
+    @abstractmethod
+    def make_sound(self):
+        """Abstract method that must be implemented by subclasses"""
+        pass
+
+    def eat(self):
+        """Normal method"""
+        print("Eating food")
+
+# Subclass implementing the abstract method
+class Dog(Animal):
+
+    def make_sound(self):
+        return "Bark"
+
+# Inspect the base class
+print("Animal.__abstractmethods__:", Animal.__abstractmethods__)
+
+# Inspect the method objects
+print("Animal.make_sound.__isabstractmethod__:", getattr(Animal.make_sound, "__isabstractmethod__", False))
+print("Animal.eat.__isabstractmethod__:", getattr(Animal.eat, "__isabstractmethod__", False))
+
+# Inspect the subclass
+print("Dog.__abstractmethods__:", Dog.__abstractmethods__)
+
+# Test instantiation
+# Animal()  # This would raise TypeError
+dog = Dog()
+print("Dog makes sound:", dog.make_sound())
+```
+
+**Output:**
+```
+Animal.__abstractmethods__: frozenset({'make_sound'})
+Animal.make_sound.__isabstractmethod__: True
+Animal.eat.__isabstractmethod__: False
+Dog.__abstractmethods__: frozenset()
+Dog makes sound: Bark
+```
+
+---
+# What is ABCMeata
+
+`ABCMeta` is the metaclass responsible for:
+
+1. Detecting methods marked with `@abstractmethod`
+2. Building the `__abstractmethods__` frozenset
+3. Preventing instantiation of classes that still have abstract methods
+## How it appears in normal code
+
+When you write:
+
+```python
+from abc import ABC, abstractmethod
+
+class A(ABC):
+
+    @abstractmethod
+    def f(self):
+        pass
+```
+
+`ABC` is actually defined roughly like:
+
+```python
+class ABC(metaclass=ABCMeta):
+    pass
+```
+
+So your class `A` is actually created like this internally:
+
+```python
+class A(metaclass=ABCMeta):
+```
+
+## What `ABCMeta` does during class creation
+
+When Python creates the class, `ABCMeta`:
+
+1. Scans the class dictionary
+2. Finds methods decorated with `@abstractmethod`
+3. Builds:
+
+```python
+__abstractmethods__ = frozenset({...})
+```
+
+Example:
+
+```python
+print(A.__abstractmethods__)
+```
+
+Output:
+
+```
+frozenset({'some_method'})
+```
+
+## Instantiation check
+
+When you try to create an instance:
+
+```python
+A()
+```
+
+`ABCMeta` checks:
+
+```python
+if cls.__abstractmethods__:
+    raise TypeError
+```
+
+So Python raises:
+
+```
+TypeError: Can't instantiate abstract class A with abstract method f
+```
+
+## Subclass behavior
+
+If a subclass implements the abstract method:
+
+```python
+class B(A):
+    def f(self):
+        return "done"
+```
+
+Now:
+
+```
+B.__abstractmethods__ = frozenset()
+```
+
+So:
+
+```
+B()  # allowed
+```
+
+## Why `ABCMeta` exists
+
+It provides **interface-like behavior** in Python, similar to interfaces in languages like Java.
+
+It ensures subclasses **must implement required methods** before they can be instantiated.
+## Simple mental model
+
+```
+class → created by a metaclass
+ABCMeta → metaclass that enforces abstract methods
+```
+
+✅ **One-line summary**
+
+`ABCMeta` is the metaclass that implements Python’s abstract class system by tracking abstract methods and preventing instantiation of incomplete classes.
+
+---
+# Accessing Outer Class Instance in Nested Classes
+
+A nested class does **not** automatically have access to the enclosing outer class instance. You must **explicitly pass** the outer instance.
+
+```python
+class Garden:
+    def __init__(self, owner):
+        self.owner = owner
+
+    class Plant:
+        def __init__(self, outer_instance):
+            self.outer = outer_instance  # store reference to outer instance
+
+        def show_owner(self):
+            print(f"The owner is {self.outer.owner}")
+
+    def create_magic_object(self):
+        self.object_in_class = self.Plant(self)
+        self.object_in_class.show_owner()
+
+object_out_class = Garden("Alice")
+object_out_class.create_magic_object()
+```
+
+**`__dict__` Proof — No Automatic Link:**
+
+```python
+class Garden:
+    def __init__(self, owner):
+        self.owner = owner
+    class Plant:
+        def __init__(self):
+            pass
+
+g = Garden("Alice")
+p = g.Plant()
+print("Garden object dict:", g.__dict__)   # {'owner': 'Alice'}
+print("Plant object dict:", p.__dict__)    # {}  ← no reference to Garden
+```
+
+**With explicit reference:**
+
+```python
+class Garden:
+    def __init__(self, owner):
+        self.owner = owner
+    class Plant:
+        def __init__(self, outer):
+            self.outer = outer
+
+g = Garden("Alice")
+p = g.Plant(g)
+print("I know the object where:", p.__dict__)
+# Output: {'outer': <__main__.Garden object at 0x...>}
+```
+
+## Class Variable & Nested Class
+
+In a **nested class**, the class name is NOT in the global namespace — it only exists within the enclosing class's namespace. Therefore, inside nested class methods, always use `cls` (not the class name directly) to access class variables or `Outer.Inner`.
+
+```python
+# ✅ Using cls inside nested class
+class Outer:
+    class Inner:
+        value = 0
+        @classmethod
+        def set_value(cls):
+            cls.value = 100
+
+Outer.Inner.set_value()
+print(Outer.Inner.value)  # 100
+
+# ✅ Using Outer.Inner directly (also works)
+class Outer:
+    class Inner:
+        value = 0
+        @classmethod
+        def set_value(cls):
+            Outer.Inner.value = 100
+
+Outer.Inner.set_value()
+print(Outer.Inner.value)  # 100
+```
+
+```python
+# ❌ Inner.value = 100 inside the method will FAIL
+class Outer:
+    class Inner:
+        value = 0
+        @classmethod
+        def set_value(cls):
+            Inner.value = 100  # NameError — 'Inner' not in global namespace
+```
+
+**For top-level classes, both work:**
+
+```python
+class A:
+    x = 10
+
+    def set_with_name(self):
+        A.x = 20  # works — A is in global namespace
+
+    @classmethod
+    def set_with_cls(cls):
+        cls.x = 30  # preferred — supports inheritance
+
+A.set_with_cls()
+print(A.x)  # 30
+a = A()
+a.set_with_name()
+print(A.x)  # 20
+```
+
+---
+
+# 45 — Polymorphism (OOP)
+
+**Polymorphism** means _“same interface, different behavior.”_  
+You can call the same method on different objects and each object responds in its own way. Python decides which implementation to run **at runtime**.
+
+In Python, the two most common forms are:
+
+1. **Subtype polymorphism** (inheritance + method overriding)
+    
+2. **Duck typing** (no inheritance required)
+    
+
+## 1) Subtype Polymorphism (Inheritance + Overriding)
+
+Subtype polymorphism happens when:
+
+- Classes share a parent class
+    
+- Child classes **override** a parent method
+    
+- Objects are used through the **parent type**
+    
+
+### Method overriding
+
+A subclass provides its own implementation of a method already defined in the parent class.
+
+```python
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+    def speak(self):
+        return f"{self.name} makes a sound."
+
+class Dog(Animal):
+    def speak(self):  # overriding
+        return f"{self.name} barks."
+
+dog = Dog("Buddy")
+print(dog.speak())
+```
+
+**Output**
+
+```
+Buddy barks.
+```
+
+### Subtype polymorphism example
+
+Different subclasses used through the same parent interface:
+
+```python
+from abc import ABC, abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def make_sound(self):
+        pass
+
+class Dog(Animal):
+    def make_sound(self):
+        return "Bark"
+
+class Cat(Animal):
+    def make_sound(self):
+        return "Meow"
+
+def animal_sound(animal: Animal):
+    print(f"The animal says: {animal.make_sound()}")
+
+dog = Dog()
+cat = Cat()
+
+animal_sound(dog)
+animal_sound(cat)
+```
+
+**Output**
+
+```
+The animal says: Bark
+The animal says: Meow
+```
+
+The function only knows it receives an `Animal`, yet each object behaves differently.
+
+## 2) Duck Typing (Behavior-based Polymorphism)
+
+Duck typing means Python doesn’t care about inheritance.  
+If an object has the required method, it can be used.
+
+> “If it looks like a duck and quacks like a duck, it’s a duck.”
+
+```python
+class Car:
+    def start(self):
+        print("Engine started")
+
+class Laptop:
+    def start(self):
+        print("Booting system")
+
+def start_device(device):
+    device.start()
+
+start_device(Car())
+start_device(Laptop())
+```
+
+**Output**
+
+```
+Engine started
+Booting system
+```
+
+No parent class exists, but the same interface works.
+
+## Summary
+
+| Concept              | Meaning                                      |
+| -------------------- | -------------------------------------------- |
+| Subtype polymorphism | Achieved via inheritance + overriding        |
+| Duck typing          | Achieved via shared behavior, no inheritance |
+
+---
+
+# Dunder Methods (Magic Methods)
+
+**Dunder methods** (double underscore methods / magic methods) are predefined methods whose names start and end with `__`. Python calls them automatically in response to built-in operations.
+
+| Method | Triggered By | Purpose |
+|--------|-------------|---------|
+| `__init__(self, ...)` | `ClassName()` | Initialize object |
+| `__str__(self)` | `print()`, `str()` | Human-readable string |
+| `__repr__(self)` | `repr()`, interactive shell | Unambiguous debug string |
+| `__add__(self, other)` | `+` operator | Addition |
+| `__mul__(self, other)` | `*` operator | Multiplication |
+| `__eq__(self, other)` | `==` operator | Equality check |
+| `__len__(self)` | `len()` | Length |
+| `__getitem__(self, key)` | `obj[key]` | Index access |
+| `__call__(self, ...)` | `obj()` | Call object like a function |
+
+```python
+class Demo:
+    def __init__(self, name, values):
+        self.name = name
+        self.values = values
+
+    def __str__(self):
+        return f"Demo object: {self.name}"
+
+    def __repr__(self):
+        return f"Demo(name='{self.name}', values={self.values})"
+
+    def __add__(self, other):
+        return self.name + other.name, self.values + other.values
+
+    def __mul__(self, times):
+        return self.name * times, self.values * times
+
+    def __eq__(self, other):
+        return self.name == other.name and self.values == other.values
+
+    def __len__(self):
+        return len(self.values)
+
+    def __getitem__(self, index):
+        return self.values[index]
+
+    def __call__(self):
+        print(f"Called object: {self.name}")
+
+# Usage
+a = Demo("A", [1, 2, 3])
+b = Demo("B", [4, 5])
+
+print(a)          # Demo object: A         (__str__)
+print(repr(a))    # Demo(name='A', values=[1, 2, 3])  (__repr__)
+c = a + b         # ('AB', [1, 2, 3, 4, 5])  (__add__)
+print(c)
+d = a * 2         # ('AA', [1, 2, 3, 1, 2, 3])  (__mul__)
+print(d)
+print(a == b)     # False  (__eq__)
+print(len(a))     # 3      (__len__)
+print(a[1])       # 2      (__getitem__)
+a()               # Called object: A  (__call__)
+```
+
+**Output:**
+```
+Demo object: A
+Demo(name='A', values=[1, 2, 3])
+('AB', [1, 2, 3, 4, 5])
+('AA', [1, 2, 3, 1, 2, 3])
+False
+3
+2
+Called object: A
+```
+
+---
+
+# 54 - The Walrus Operator `:=`
+
+The walrus operator, also known as the **assignment expression operator**, is a feature introduced in Python 3.8. It is represented by the `:=` syntax. The purpose of the walrus operator is to **assign a variable to a value as part of an expression**, typically within control flow statements or when passing arguments to functions.
+
+```python
+#1
+data = [1, 2, 3, 4, 5]
+
+while (n := len(data)) > 0:
+    print(f"List length: {n}")
+    data.pop()
+
+#2
+text = "Hello, World!"
+
+if (length := len(text)) > 10:
+    print(f"The text is long with {length} characters.")
+```
+
+**Output:**
+```
+List length: 5
+List length: 4
+List length: 3
+List length: 2
+List length: 1
+The text is long with 13 characters.
+```
+
+---
+
+# 55 - Lambda Functions
+
+Lambda functions in Python, often referred to as **"anonymous functions"**, are small, inline functions that can have any number of parameters but only one expression. They are defined using the `lambda` keyword followed by the parameters, a colon (`:`), then the expression to be evaluated.
+
+**Syntax:** `(lambda parameters : expression)(arguments)`
+
+```python
+add = lambda a, b: a + b
+print(add(5, 3))  # Output: 8
+
+name = lambda first_name, last_name: first_name + " " + last_name
+print(name(first_name="Joe", last_name="Doe"))  # Output: Joe Doe
+
+# Using a lambda function directly without assigning it to a variable
+print((lambda x, y: x + y)(7, 5))  # Output: 12
+
+print((lambda age: True if age < 10 else False)(9))  # Output: True
+```
+
+---
+
+# 56 - `sorted()` and `sort()`
+
+- **`sorted(sequence)`** — creates a **new sorted list** without modifying the original; suitable for preserving original order or sorting immutable sequences.
+- **`sequence.sort()`** — sorts **in-place**, only works on lists.
+- Both accept optional parameters: `reverse=True` or `key=` to define a custom sort index.
+
+```python
+#sorted()
+numbers = [3, 1, 4, 1, 5, 9]
+sorted_numbers = sorted(numbers)
+print(sorted_numbers)  # Output: [1, 1, 3, 4, 5, 9]
+
+words = ['apple', 'grape', 'orange']
+print(sorted(words, key=len))  # Output: ['apple', 'grape', 'orange']
+
+sorted_numbers_desc = sorted(numbers, reverse=True)
+print(sorted_numbers_desc)  # Output: [9, 5, 4, 3, 1, 1]
+
+artifacts = [
+	{"name": "Crystal Orb", "power": 85, "type": "orb"},
+	{"name": "Fire Staff", "power": 92, "type": "staff"},
+]
+sorted(artifacts, key=lambda a: a["power"], reverse=True)
+
+#sort()
+numbers = [3, 1, 4, 1, 5, 9]
+numbers.sort()
+print(numbers)  # Output: [1, 1, 3, 4, 5, 9]
+
+words = ['apple', 'grape', 'orange']
+words.sort(key=len)
+print(words)  # Output: ['apple', 'grape', 'orange']
+
+numbers.sort(reverse=True)
+print(numbers)  # Output: [9, 5, 4, 3, 1, 1]
+```
+
+Here is everything combined into one clean script:
+
+```python
+# 1. List
+a = [5, 2, 9, 1]
+b_list = sorted(a)
+
+print("List original:", a)
+print("List sorted:", b_list)
+print()
+
+# 2. Tuple
+t = (4, 1, 7)
+b_tuple = sorted(t)
+
+print("Tuple sorted:", b_tuple)
+print()
+
+# 3. String
+s = "cab"
+b_string = sorted(s)
+
+print("String sorted:", b_string)
+print()
+
+# 4. Set
+st = {10, 3, 7}
+b_set = sorted(st)
+
+print("Set sorted:", b_set)
+print()
+
+# Key idea
+print("Original types unchanged, sorted() always returns a new LIST.")
+```
+
+The exact output will be:
+
+```
+List original: [5, 2, 9, 1]
+List sorted: [1, 2, 5, 9]
+
+Tuple sorted: [1, 4, 7]
+
+String sorted: ['a', 'b', 'c']
+
+Set sorted: [3, 7, 10]
+
+Original types unchanged, sorted() always returns a new LIST.
+```
+
+## What `key` actually means
+
+When you pass `key=some_function`, Python does **not** sort the items directly.
+
+Instead, it does this internally:
+
+1. For every element in the iterable
+2. Call the key function on it
+3. Use the returned value for comparison
+4. Keep the original elements, only use the key for ordering
+
+Think of it like: *“Sort by this computed value.”*
+
+## Step-by-step with `key=len`
+
+Example:
+
+```python
+words = ["cat", "elephant", "dog"]
+sorted(words, key=len)
+```
+
+### Step 1 — Python computes keys
+
+Python secretly builds pairs:
+
+```
+("cat", len("cat"))        -> ("cat", 3)
+("elephant", len(...))     -> ("elephant", 8)
+("dog", len("dog"))        -> ("dog", 3)
+```
+
+So internally it becomes something like:
+
+```
+[(3, "cat"), (8, "elephant"), (3, "dog")]
+```
+
+### Step 2 — Python sorts by the key (the first value)
+
+Sort by numbers:
+
+```
+[(3, "cat"), (3, "dog"), (8, "elephant")]
+```
+
+### Step 3 — Python removes the keys and returns originals
+
+Final result:
+
+```python
+['cat', 'dog', 'elephant']
+```
+
+The strings were **never compared directly**.
+Only their lengths were compared.
+
+## Very important insight
+
+`key` must be a **function that takes one item and returns a value** that Python knows how to compare.
+
+Python can easily compare:
+
+* numbers
+* strings
+* tuples
+
+That’s why `key` often returns one of those.
+
+---
+
+# 57 - The `map()` Function
+
+The `map()` function applies a given function to **each item of a sequence** (list, tuple, string) and returns a new sequence with the results.
+
+**Syntax:** `map(function, sequence)`
+
+> Converting the result of `map()` to a list is useful because `map()` returns a **lazy iterator** — it generates values on demand and can only be traversed once. By converting it to a list you can access all results immediately, reuse the data, and use list operations. Avoid for very large datasets.
+
+```python
+def double(x):
+    return x * 2
+
+numbers = [1, 2, 3, 4, 5]
+doubled_numbers = list(map(double, numbers))
+print(doubled_numbers)
+
+#2
+store = [("shirt", 20.00),
+         ("pants", 25.00),
+         ("jacket", 50.00),
+         ("socks", 10.00)]
+
+to_euros = lambda data: (data[0], data[1] * 0.82)
+store_euros = list(map(to_euros, store))
+for i in store_euros:
+    print(i)
+
+#3
+def capitalize_char(char):
+    return char.upper()
+
+string = "hello"
+capitalized_string = list(map(capitalize_char, string))
+print(capitalized_string)
+```
+
+**Output:**
+```
+[2, 4, 6, 8, 10]
+('shirt', 16.4)
+('pants', 20.5)
+('jacket', 41.0)
+('socks', 8.2)
+['H', 'E', 'L', 'L', 'O']
+```
+
+---
+
+# 58 - The `filter()` Function
+
+The `filter()` function filters elements of an iterable for which a given function returns `True`.
+
+**Syntax:** `filter(function, iterable)`
+
+> Like `map()`, `filter()` returns a **lazy iterator**. Convert to a list or tuple for repeated access. Avoid for very large datasets.
+
+```python
+#1
+numbers = [10, 20, 33, 41, 50, 62, 70, 85]
+
+ten_base = lambda num: num % 10 == 0
+print(list(filter(ten_base, numbers)))
+
+#2
+chapels = [("Alice", 22), ("Bob", 16), ("Charlie", 25), ("David", 18), ("Emily", 10)]
+
+adult_chapels = filter(lambda x: x[1] >= 18, chapels)
+adult_chapels_list = list(adult_chapels)
+
+print(adult_chapels_list)
+```
+
+**Output:**
+```
+[10, 20, 50, 70]
+[('Alice', 22), ('Charlie', 25), ('David', 18)]
+```
+
+---
+
+# 59 - The `reduce()` Function
+
+The `reduce()` function (from `functools`) **repeatedly applies a function** to elements of a sequence, cumulatively reducing it to a single value. It processes two elements at a time: starts with the first two, applies the function, then uses the result with the next element, and so on.
+
+```python
+from functools import reduce
+
+# Example 1: Using reduce() to calculate the product of a list
+numbers = [1, 2, 3, 4]
+product = reduce(lambda x, y: x * y, numbers)
+print("Product of numbers:", product)  # Output: 24
+
+# Example 2: Finding the maximum value in a list
+nums = [10, 20, 5, 40, 15]
+max_num = reduce(lambda x, y: x if x > y else y, nums)
+print("Maximum number:", max_num)  # Output: 40
+
+# Example 3: Using an initializer
+sum_with_initializer = reduce(lambda x, y: x + y, numbers, 10)
+print("Sum with initializer:", sum_with_initializer)  # Output: 20
+
+# Example 4: Define a standalone function
+def multiply(x, y):
+    return x * y
+
+# Use the function with reduce
+result = reduce(multiply, numbers)
+print("Product of numbers:", result)  # Output: 24
+```
+
+---
+
+# 60 - The `zip()` Function
+
+The `zip()` function combines **multiple iterables** into a single iterable of tuples. The i-th tuple contains the i-th element from each of the input iterables.
+
+**Syntax:** `zip(iterable1, iterable2, ...)`
+
+> `zip()` returns a **lazy iterator**. Convert to list, tuple, or dict for reuse. Avoid for very large datasets.
+
+```python
+# Two lists to zip
+names = ["Alice", "Bob", "Charlie"]
+scores = [85, 90, 78]
+
+# Zipping the lists together
+zipped = zip(names, scores)
+
+# Convert to a list of tuples
+result = list(zipped)
+print(result)
+
+# Iterating through zipped pairs
+for name, score in zip(names, scores):
+    print(f"{name} scored {score}")
+```
+
+**Output:**
+```
+[('Alice', 85), ('Bob', 90), ('Charlie', 78)]
+Alice scored 85
+Bob scored 90
+Charlie scored 78
+```
+
+---
+
+# 61 - List Comprehensions
+
+List comprehensions provide a **concise way to create lists** by applying an expression to each item in an iterable, with optional filtering. Also works on sets.
+
+**Syntax:**
+```
+List = [ expression for item in iterable ]
+List = [ expression for item in iterable if condition ]
+List = [ expression_if_true if condition else expression_if_false for item in iterable ]
+List = [ function(expression) for item in iterable ]
+```
+
+```python
+# Squaring numbers in a range
+squares = [x**2 for x in range(5)]
+print(squares)
+
+# Filtering even numbers
+list = [1,2,3,4,5,6]
+evens = [x for x in list if x % 2 == 0]
+print(evens)
+
+# Categorizing numbers as "Even" or "Odd"
+categories = ["Even" if x % 2 == 0 else "Odd" for x in range(5)]
+print(categories)
+
+# Applying a function to numbers
+def double(x):
+    return x * 2
+
+doubled = [double(x) for x in range(5)]
+print(doubled)
+```
+
+**Output:**
+```
+[0, 1, 4, 9, 16]
+[2, 4, 6]
+['Even', 'Odd', 'Even', 'Odd', 'Even']
+[0, 2, 4, 6, 8]
+```
+
+---
+
+# 62 - Tuple Comprehension
+
+Tuple comprehension uses a syntax similar to list comprehensions but **returns a generator object** — pass it to `tuple()` to get the actual tuple.
+
+**Syntax:**
+```
+Tuple = tuple( expression for item in iterable )
+Tuple = tuple( expression for item in iterable if condition )
+Tuple = tuple( expression_if_true if condition else expression_if_false for item in iterable )
+Tuple = tuple( function(expression) for item in iterable )
+```
+
+```python
+# Creating a tuple of squares
+squares = tuple(x**2 for x in range(5))
+print(squares)  # Output: (0, 1, 4, 9, 16)
+
+# Creating a tuple of even numbers
+evens = tuple(x for x in range(10) if x % 2 == 0)
+print(evens)  # Output: (0, 2, 4, 6, 8)
+
+# Categorizing numbers as "Even" or "Odd" in a tuple
+categories = tuple("Even" if x % 2 == 0 else "Odd" for x in range(5))
+print(categories)  # Output: ('Even', 'Odd', 'Even', 'Odd', 'Even')
+
+# Applying a function to numbers and storing results in a tuple
+def double(x):
+    return x * 2
+
+doubled = tuple(double(x) for x in range(5))
+print(doubled)  # Output: (0, 2, 4, 6, 8)
+```
+
+---
+
+# 63 - Dictionary Comprehensions
+
+Dictionary comprehensions provide a **concise way to create dictionaries**, optionally filtering items.
+
+**Syntax:**
+```
+dictionary = {key: expression for (key, value) in iterable.items()}
+dictionary = {key: expression for (key, value) in iterable.items() if conditional}
+dictionary = {key: (expr_if_true if condition else expr_if_false) for (key, value) in iterable.items()}
+dictionary = {key: function(value) for (key, value) in iterable.items()}
+```
+
+```python
+# Creating a dictionary with squares of values
+original = {'a': 2, 'b': 3, 'c': 4}
+squared_dict = {key + str(value): value ** 2 for key, value in original.items()}
+print(squared_dict)  # Output: {'a2': 4, 'b3': 9, 'c4': 16}
+
+# Filtering dictionary to include only even values
+filtered_dict = {key: value for key, value in original.items() if value % 2 == 0}
+print(filtered_dict)  # Output: {'a': 2, 'c': 4}
+
+# Categorizing values as "Even" or "Odd"
+categorized_dict = {key: "Even" if value % 2 == 0 else "Odd" for key, value in original.items()}
+print(categorized_dict)  # Output: {'a': 'Even', 'b': 'Odd', 'c': 'Even'}
+
+# Applying a function to values in the dictionary
+def double(x):
+    return x * 2
+
+doubled_dict = {key: double(value) for key, value in original.items()}
+print(doubled_dict)  # Output: {'a': 4, 'b': 6, 'c': 8}
+```
+
+---
+
+# 63 - Set Comprehensions
+
+Set comprehensions provide a **concise way to create sets**, similar to list comprehensions. Results are unique (no duplicates).
+
+**Syntax:**
+```
+new_set = {expression for item in iterable}
+new_set = {expression for item in iterable if conditional}
+new_set = {expr_if_true if conditional else expr_if_false for item in iterable}
+new_set = {function(item) for item in iterable}
+```
+
+```python
+# Original iterable
+numbers = [1, 2, 3, 4, 5]
+
+# 1 Basic set comprehension: squares
+squares = {n**2 for n in numbers}
+print("Squares:", squares)
+
+# 2 Set comprehension with condition: only even numbers
+even_squares = {n**2 for n in numbers if n % 2 == 0}
+print("Even squares:", even_squares)
+
+# 3 Conditional expression inside comprehension: label numbers as 'even' or 'odd'
+labels = {"even" if n % 2 == 0 else "odd" for n in numbers}
+print("Labels:", labels)
+
+# 4 Apply a function inside comprehension: convert numbers to strings
+str_numbers = {str(n) for n in numbers}
+print("String numbers:", str_numbers)
+```
+
+---
+
+# 64 - `enumerate()`
+
+The `enumerate()` function adds a **counter to an iterable** and returns it as an enumerate object — very useful when you need both the index and the value.
+
+**Syntax:** `enumerate(iterable, start=0)`
+- `iterable` — the sequence to loop through
+- `start` — starting index of the counter (default is `0`)
+
+```python
+fruits = ['apple', 'banana', 'cherry']
+for index, fruit in enumerate(fruits, start=1):
+    print(f"Index {index}: {fruit}")
+
+fruits = ['apple', 'banana', 'cherry']
+indexed_fruits = [(index, fruit) for index, fruit in enumerate(fruits)]
+print(indexed_fruits)
+
+numbers = [10, 20, 30]
+enumerated_numbers = list(enumerate(numbers))
+print(enumerated_numbers)
+```
+
+**Output:**
+```
+Index 1: apple
+Index 2: banana
+Index 3: cherry
+[(0, 'apple'), (1, 'banana'), (2, 'cherry')]
+[(0, 10), (1, 20), (2, 30)]
+```
+
+---
+
+# `globals()`
+
+`globals()` is used to **dynamically create global variables** (e.g. `player1`, `player2` …) and assign them values at runtime. Useful for handling multiple related variables without explicitly defining each one.
+
+> ⚠️ This approach reduces code readability and maintainability. A **better alternative** is using **dictionaries or lists** to store dynamically created objects — keeps data organized and avoids polluting the global namespace.
+
+```python
+# Using globals() to create variables from player1 to player4
+for i in range(1, 5):
+    globals()[f"player{i}"] = i * 10
+
+print("From globals():", player1)  # type: ignore
+
+# Using dictionary data structure to create variables from player1 to player4
+player = {f"player{i}": i * 100 for i in range(1, 5)}
+
+print("From dictionary:", player)
+print("From dictionary:", player["player1"])
+```
+
+**Output:**
+```
+From globals(): 10
+From dictionary: 100
+From dictionary: {'player1': 100, 'player2': 200, 'player3': 300, 'player4': 400}
+```
+
+---
 # 33 — File Detection
 
 File detection in Python involves checking whether a file exists in the filesystem, verifying its attributes, and determining its type.
@@ -2072,1608 +3769,6 @@ shutil.rmtree('example_dir')    # Deletes a directory and ALL its contents
 | Copy | | | ✅ | ✅ (best) |
 | Move | | ✅ | | ✅ (best) |
 | Delete | | ✅ | | ✅ |
-
----
-
-# 40 — Module
-
-A **module** is a Python file that contains reusable code — functions, classes, and variables — designed to organize and simplify your programs.
-
-- **Standard** — Built-in modules like `math`, `os`.
-- **Third-party** — Installed via `pip`.
-- **Custom** — Created by you.
-
-```python
-# "Test1.py" file
-def function(number):
-    print(f"From Test{number}: {number * 10}")
-
-function(1)  # Output: From Test1: 10
-```
-
-```python
-# "Test2.py" file
-import Test1
-
-Test1.function(2)
-# Output: From Test1: 10  # From running the Test1 Code
-# Output: From Test2: 20  # From the current Code (Test2)
-```
-
-**Output:**
-```
-From Test1: 10
-From Test2: 20
-```
-
----
-
-# 40-A — `if __name__ == "__main__"`
-
-This conditional checks whether the script is being **run directly** or **imported as a module**.
-
-- When run directly → `__name__` is set to `"__main__"`.
-- When imported → `__name__` is set to the module's file name.
-
-```python
-# "Test1.py" file
-def greet():
-    print("Hello from Test1!")
-
-if __name__ == "__main__":
-    greet()
-    print(f"Script is being run directly, in \"{__name__}\" file")
-else:
-    print(f"This Code is Imported to {__name__} file")
-```
-
-**When run directly:**
-```
-Hello from Test1!
-Script is being run directly, in "__main__" file
-```
-
-**When imported:**
-```
-This Code is Imported to Test1 file
-Hello from Test1!
-```
-
----
-
-# 41 — Object-Oriented Programming (OOP)
-
-**OOP** is a programming paradigm that organizes code into **objects**, which combine data (attributes) and functions (methods).
-
-- **Class** — A blueprint/template that defines the structure and behavior of objects. It specifies attributes (data/properties) and methods (functions/behaviors).
-- **Object** — A specific instance of a class. Each object has a unique memory location and its own set of attribute values.
-
-## Class Variables
-
-Shared among **all instances** of a class. Defined outside any method. Accessed via the class name or `self`, and modified using a `@classmethod`.
-
-## `__init__` (Constructor)
-
-Automatically called during object creation to initialize attributes. Cannot use `return`.
-
-## Attributes (Instance Variables)
-
-Unique to individual objects. Initialized in `__init__` to store object-specific data. Can be modified after creation.
-
-## Methods
-
-Functions within a class that define behaviors. The first parameter `self` refers to the calling object.
-
-## Full Example:
-
-```python
-class Car:
-    wheels = 4  # Class variable
-
-    def __init__(self, make, model, year):
-        self.make = make    # Instance variable
-        self.model = model
-        self.year = year
-        self.is_car = True
-        print("Object created")
-
-    def drive(self):
-        return f"The {self.make} {self.model} is now driving with {Car.wheels} wheels"
-
-car1 = Car("Toyota", "Corolla", 2020)
-car2 = Car("Honda", "Civic", 2021)
-
-print(car2.model)     # Civic
-print(car2.is_car)    # True
-print(car1.drive())   # The Toyota Corolla is now driving with 4 wheels
-car2.wheels = 3       # Change instance class variable value
-print(car2.drive())   # The Honda Civic is now driving with 3 wheels
-```
-
-**Output:**
-
-```
-Object created
-Object created
-Civic
-True
-The Toyota Corolla is now driving with 4 wheels
-The Civic is now driving with 3 / 4 wheels
-```
-
-## `self` — What It Is and Why It Matters
-
-`self` refers to the **specific instance** of the object being created or modified. It allows each object to store its own attributes and access its own methods.
-
-Without `self`, changes would apply only to temporary local variables — the object would not remember its updated values.
-
-```python
-class Plant:
-    def __init__(self, name, height, age):
-        self.name = name
-        height = height + 10  # ❌ local only — NOT stored on object
-        self.age = age
-        print(f"{self.name} grew to {height}cm")
-
-rose = Plant("rose", 25, 30)
-
-if rose.height > 30:  # ❌ ERROR — height was never assigned to self
-    print(f"{rose.name} is tall!")
-```
-
-**Output:**
-
-```
-rose grew to 35cm
-AttributeError: 'Plant' object has no attribute 'height'
-```
-
-## How Objects Are Stored
-
-Instance data is stored in memory using an internal dictionary (`__dict__`). When you do `self.attribute = value`, Python inserts an entry into the object's `__dict__`.
-
-```python
-class Book:
-    def __init__(self, title, pages):
-        self.title = title
-        self.pages = pages
-
-b = Book("Python Basics", 200)
-print(b.__dict__)            # {'title': 'Python Basics', 'pages': 200}
-print(b.title)               # Python Basics
-print(b.__dict__['title'])   # Python Basics
-```
-
-### Using the Class Name Instead of `self`
-
-Use the class name when working with **class-level data** shared by all instances.
-
-```python
-class Car:
-    total = 0  # class variable (shared)
-
-    def __init__(self):
-        Car.total += 1
-
-    def show():
-        print(f"There are {Car.total} cars")
-
-car_1 = Car()
-car_2 = Car()
-car_3 = Car()
-Car.show()
-```
-
-**Output:**
-```
-There are 3 cars
-```
-
----
-
-# Protected Attributes
-
-A **single underscore** prefix (e.g., `_age`) is a convention indicating the attribute is for **internal use only**. It is NOT enforced by Python — external code can still access it.
-
-```python
-class Plant:
-    def __init__(self, name, age):
-        self.name = name
-        self._age = age   # protected attribute
-
-    def grow(self):
-        self._age += 1
-        print(f"{self.name} is now {self._age} days old.")
-
-rose = Plant("Rose", 30)
-print(rose.name)    # Output: Rose
-print(rose._age)    # Output: 30 (accessible but not recommended)
-rose._age = 14      # This takes effect
-rose.grow()         # Output: Rose is now 15 days old.
-```
-
----
-
-# Name Mangling
-
-A **double underscore** prefix (e.g., `__age`) triggers **name mangling** — Python renames the attribute internally to `_ClassName__age`. This prevents direct access by the original name from outside the class.
-
-```python
-class Plant:
-    def __init__(self, name, age):
-        self.name = name
-        self.__age = age  # double underscore
-
-    def grow(self):
-        self.__age += 1
-        print(f"{self.name} is now {self.__age} days old.")
-
-rose = Plant("Rose", 30)
-# print(rose.__age)         # AttributeError
-rose._Plant__age = 14       # Accessible via mangled name (not recommended)
-print(rose._Plant__age)     # Output: 30
-rose.grow()
-```
-
----
-
-# 56 — Inheritance (OOP)
-
-**Inheritance** allows one class (child/subclass) to inherit the attributes and methods of another class (parent/superclass). The child class can extend or override the parent's behavior.
-
-**Types of inheritance:**
-- **Single** — Child inherits from one parent.
-- **Multiple** — Child inherits from multiple parents.
-- **Multilevel** — Chain of inheritance (A → B → C).
-- **Hierarchical** — Multiple children from one parent.
-- **Hybrid** — Combination of types.
-
-```python
-# Parent class
-class Animal:
-    def __init__(self, name):
-        self.name = name
-        self.animal = "Animal"
-
-    def Animal_speak(self):
-        return f"The {self.animal} makes a sound."
-
-# Child class
-class Dog(Animal):
-    def Dog_speak(self):
-        return f"{self.name} barks."
-
-# Another child class
-class Cat(Animal):
-    def Cat_speak(self):
-        return f"{self.name} meows."
-
-dog = Dog("Buddy")
-cat = Cat("Whiskers")
-
-print(dog.Dog_speak())       # Buddy barks.
-print(cat.Cat_speak())       # Whiskers meows.
-print(cat.Animal_speak())    # The Animal makes a sound.
-```
-
-**Output:**
-```
-Buddy barks.
-Whiskers meows.
-The Animal makes a sound.
-```
-
-> **Note:** A child class cannot pick and choose which arguments to pass from a parent's constructor. If `super().__init__()` is called, all required parent parameters must be satisfied. To handle cases where the child only cares about some attributes, provide **default values** for unused parameters.
-
-```python
-class Parent:
-    def __init__(self, name, age, role):
-        self.name = name
-        self.age = age
-        self.role = role
-
-class Child(Parent):
-    def __init__(self, name):
-        # Provide default values for other parameters
-        super().__init__(name, age=0, role="unknown")
-        print(f"Name: {self.name}, Age: {self.age}, Role: {self.role}")
-
-c = Child("Alice")
-```
-
----
-
-# 46 — Method Chaining (OOP)
-
-**Method chaining** (fluent interface) allows multiple methods to be called on the same object in a single line. Each method returns `self` to enable chaining.
-
-```python
-class Calculator:
-    def __init__(self, value=0):
-        self.value = value
-
-    def add(self, num):
-        self.value += num
-        return self  # Return the object for chaining
-
-    def multiply(self, num):
-        self.value *= num
-        return self
-
-    def divide(self, num):
-        if num != 0:
-            self.value /= num
-        return self
-
-    def result(self):
-        return self.value
-
-calc = Calculator()
-result = calc.add(10).multiply(5).divide(2).result()
-print(f"Result: {result}")  # Output: Result: 25.0
-```
-
-**Output:**
-```
-Result: 25.0
-```
-
-> `self` is what makes method chaining work: each call receives the same object with its updated state. Without `self`, changes would only exist temporarily inside the method.
-
----
-
-# 47 — The `super()` Function (OOP)
-
-`super()` accesses methods and attributes of a **parent class** without directly naming it. It is especially useful when a child class overrides a method but still needs the parent’s behavior.
-## Basic Example
-
-```python
-class Parent:
-    def __init__(self, name):
-        self.name = name
-
-    def greet(self):
-        print(f"Hello, my name is {self.name}.")
-
-class Child(Parent):
-    def __init__(self, name, age):
-        super().__init__(name)  # Call Parent's __init__
-        self.age = age
-
-    def greet(self):
-        super().greet()  # Call Parent's greet
-        print(f"I am {self.age} years old.")
-
-child = Child("Alice", 12)
-child.greet()
-```
-
-**Output:**
-
-```
-Hello, my name is Alice.
-I am 12 years old.
-```
-
-## Grandchild Example (calling parent constructor explicitly)
-
-You can also create a **grandchild class**, and still call the parent constructor directly.
-
-This shows how inheritance chains work beyond one level.
-
-```python
-class Parent:
-    def __init__(self, name):
-        self.name = name
-
-class Child(Parent):
-    def __init__(self, name, age):
-        super().__init__(name)
-        self.age = age
-
-class Grand_Child(Child):
-    def __init__(self, name, height):
-        Parent.__init__(self, name)  # Call Parent's __init__ directly
-        self.height = height
-
-    def greet(self):
-        print(f"I am {self.height} cm.")
-
-child = Grand_Child("Alice", 12)
-child.greet()
-```
-
-**Output:**
-
-```
-I am 12 cm.
-```
-
-## Key idea
-
-|Method|Meaning|
-|---|---|
-|`super()`|Follows inheritance chain automatically (recommended)|
-|`Parent.__init__()`|Direct call to a specific class (manual control)|
-
-`super()` is safer in complex inheritance trees, while direct calls give explicit control but can break MRO logic in multiple inheritance cases.
-
----
-
-# 48 — Abstract Methods (OOP)
-
-**Abstract classes** contain one or more abstract methods (templates with no implementation). They **cannot be instantiated directly (if they have @abstractmethod)** — subclasses must provide concrete implementations.
-
-To define an abstract class: import `ABC` from the `abc` module and use `@abstractmethod`.
-
-```python
-from abc import ABC, abstractmethod
-
-class Shape(ABC):  # Abstract base class
-    @abstractmethod
-    def calculate_area(self):
-        pass
-
-class Circle(Shape):  # Subclass implementing the abstract method
-    def __init__(self, radius):
-        self.radius = radius
-
-    def calculate_area(self, pi):
-        return pi * (self.radius ** 2)
-
-circle = Circle(5)
-print("Circle Area:", circle.calculate_area(3.14159))
-
-try:
-    shape = Shape()  # Cannot instantiate abstract class
-except Exception as e:
-    print(f"Error: {e}")
-```
-
-**Output:**
-```
-Circle Area: 78.53975
-Error: Can't instantiate abstract class Shape without an implementation for abstract method 'calculate_area'
-```
-
-### How Python Raises Errors for Abstract Base Classes
-
-In Python When a method is decorated with `@abstractmethod`, Python marks it with `__isabstractmethod__ = True` and adds it to the class’s `__abstractmethods__` set. During instantiation, Python checks this set: if it is non-empty, the class is considered abstract, and attempting to create an instance from the Abstract class itself raises a TypeError. If the class has no abstract methods, the `__abstractmethods__` set is empty, and Python allows instantiation. So, ABCs themselves are not inherently blocked from instantiation; it is the presence of abstract methods that enforces the error, ensuring that subclasses implement all required behavior before they can be instantiated.
-### How Python Tracks Abstract Methods
-
-**Definition**
-
-In Python, when using abstract base classes from abc, every class has a `__abstractmethods__` attribute, which is a `frozenset` containing the names of abstract methods that are not yet implemented.
-
-- If `class A(ABC)` has a **non-empty `__abstractmethods__` set**, the class is considered **abstract**, and attempting to instantiate it (`A()`) raises a `TypeError`.
-    
-- If `A.__abstractmethods__` is **empty**, the class is **concrete**, and `A()` can be instantiated without error.
-
-In the other-hand for the subclasses:
-
-- If `class B(A)` has a **non-empty `__abstractmethods__`**, it means **not all abstract methods inherited from `A` have been implemented**, so `B()` raises a `TypeError`.
-    
-- If `B.__abstractmethods__` is **empty**, it means **all inherited abstract methods have been implemented**, and the class can be instantiated normally.
-
-```python
-from abc import ABC, abstractmethod
-
-# Base class with an abstract method
-class Animal(ABC):
-
-    @abstractmethod
-    def make_sound(self):
-        """Abstract method that must be implemented by subclasses"""
-        pass
-
-    def eat(self):
-        """Normal method"""
-        print("Eating food")
-
-# Subclass implementing the abstract method
-class Dog(Animal):
-
-    def make_sound(self):
-        return "Bark"
-
-# Inspect the base class
-print("Animal.__abstractmethods__:", Animal.__abstractmethods__)
-
-# Inspect the method objects
-print("Animal.make_sound.__isabstractmethod__:", getattr(Animal.make_sound, "__isabstractmethod__", False))
-print("Animal.eat.__isabstractmethod__:", getattr(Animal.eat, "__isabstractmethod__", False))
-
-# Inspect the subclass
-print("Dog.__abstractmethods__:", Dog.__abstractmethods__)
-
-# Test instantiation
-# Animal()  # This would raise TypeError
-dog = Dog()
-print("Dog makes sound:", dog.make_sound())
-```
-
-**Output:**
-```
-Animal.__abstractmethods__: frozenset({'make_sound'})
-Animal.make_sound.__isabstractmethod__: True
-Animal.eat.__isabstractmethod__: False
-Dog.__abstractmethods__: frozenset()
-Dog makes sound: Bark
-```
-
----
-# What is ABCMeata
-
-`ABCMeta` is the metaclass responsible for:
-
-1. Detecting methods marked with `@abstractmethod`
-2. Building the `__abstractmethods__` frozenset
-3. Preventing instantiation of classes that still have abstract methods
-## How it appears in normal code
-
-When you write:
-
-```python
-from abc import ABC, abstractmethod
-
-class A(ABC):
-
-    @abstractmethod
-    def f(self):
-        pass
-```
-
-`ABC` is actually defined roughly like:
-
-```python
-class ABC(metaclass=ABCMeta):
-    pass
-```
-
-So your class `A` is actually created like this internally:
-
-```python
-class A(metaclass=ABCMeta):
-```
-
-## What `ABCMeta` does during class creation
-
-When Python creates the class, `ABCMeta`:
-
-1. Scans the class dictionary
-2. Finds methods decorated with `@abstractmethod`
-3. Builds:
-
-```python
-__abstractmethods__ = frozenset({...})
-```
-
-Example:
-
-```python
-print(A.__abstractmethods__)
-```
-
-Output:
-
-```
-frozenset({'some_method'})
-```
-
-## Instantiation check
-
-When you try to create an instance:
-
-```python
-A()
-```
-
-`ABCMeta` checks:
-
-```python
-if cls.__abstractmethods__:
-    raise TypeError
-```
-
-So Python raises:
-
-```
-TypeError: Can't instantiate abstract class A with abstract method f
-```
-
-## Subclass behavior
-
-If a subclass implements the abstract method:
-
-```python
-class B(A):
-    def f(self):
-        return "done"
-```
-
-Now:
-
-```
-B.__abstractmethods__ = frozenset()
-```
-
-So:
-
-```
-B()  # allowed
-```
-
-## Why `ABCMeta` exists
-
-It provides **interface-like behavior** in Python, similar to interfaces in languages like Java.
-
-It ensures subclasses **must implement required methods** before they can be instantiated.
-## Simple mental model
-
-```
-class → created by a metaclass
-ABCMeta → metaclass that enforces abstract methods
-```
-
-✅ **One-line summary**
-
-`ABCMeta` is the metaclass that implements Python’s abstract class system by tracking abstract methods and preventing instantiation of incomplete classes.
-
----
-# 49 — The Class Method (OOP)
-
-A `@classmethod` is bound to the **class itself** rather than to instances. It takes `cls` as its first parameter instead of `self`.
-
-**Use cases:**
-1. Modify shared class variables (changes apply to all instances).
-2. Alternative constructors — initialize a class in different ways.
-
-> `self` is NOT accessible inside a `@classmethod`.
-
-### (*1) Using `@classmethod` — shared counter
-
-```python
-class Example:
-
-    count = 0
-
-	def __init__(self, name):
-		self.name = name
-
-    @classmethod
-    def increment_count(cls):
-        cls.count += 1
-        return cls.count
-
-print(f"count = {Example.increment_count()}")    # count = 1
-print(f"count = {Example.increment_count()}")     # count = 2
-print(f"count = {Example.increment_count()}")     # count = 3
-
-example_instance2 = Example("Alice")
-print(f"count = {example_instance2.increment_count()}")  # count = 4
-```
-
-### Not Using `@classmethod` — per-instance counter
-
-```python
-class Example:
-    count = 0
-
-    def increment_count(self):
-        self.count += 1
-        return self.count
-
-example_instance1 = Example()
-print(f"count = {Example().increment_count()}")       # count = 1
-print(f"count1 = {example_instance1.increment_count()}")  # count1 = 1
-print(f"count1 = {example_instance1.increment_count()}")  # count1 = 2
-
-example_instance2 = Example()
-print(f"count2 = {example_instance2.increment_count()}")  # count2 = 1
-```
-
-### (*2) Alternative Constructor
-
-```python
-class Person:
-    current_year = 2000  # Class attribute
-
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
-        self.current_year = 2024
-
-    @classmethod
-    def from_birth_year(cls, name, age):
-        current_year = 2024
-        birth_year = current_year - age
-        return cls(name, age, birth_year)
-        # return Person(name, age, birth_year) <-- this also works
-
-Person("Alice", 40, 1984)
-p = Person.from_birth_year("Alice", 40)
-print(p.birth_year)
-```
-
-**Output:**
-```
-My name is Alice, i'm 40, i was born in 1984
-My name is Alice, i'm 40, i was born in 1984
-1984
-```
-
-### (*3) `self` Not Accessible in `@classmethod`
-
-```python
-class Person:
-    current_year = 2000
-
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
-        self.current_year = 2024
-
-    @classmethod
-    def from_birth_year(cls, name, birth_year):
-        age = self.current_year - birth_year  # ❌ NameError
-        return cls(name, age)
-
-try:
-    Person.from_birth_year(name="Alice", birth_year=1994)
-except NameError:
-    print("Error: name 'self' is not defined ('self' is not accessible in classmethod)")
-```
-
-**Output:**
-```
-Error: name 'self' is not defined ('self' is not accessible in classmethod)
-```
-
-### Why `cls` Matters (vs. Hard-coding Class Name)
-
-Using `cls` preserves correct inheritance — without it, subclasses are forced to share the base class's state.
-
-```python
-# ❌ Hard-coded (breaks inheritance)
-class Base:
-    count = 0
-    @classmethod
-    def inc(cls):
-        Base.count += 1  # hard-coded
-
-class Child(Base):
-    count = 10
-
-Child.inc()
-print(Base.count)   # 1
-print(Child.count)  # 10  (unchanged!)
-
-# ✅ Using cls (correct)
-class Base:
-    count = 0
-    @classmethod
-    def inc(cls):
-        cls.count += 1  # dynamic
-
-class Child(Base):
-    count = 10
-
-Child.inc()
-print(Base.count)   # 0
-print(Child.count)  # 11
-```
-
----
-# Accessing Outer Class Instance in Nested Classes
-
-A nested class does **not** automatically have access to the enclosing outer class instance. You must **explicitly pass** the outer instance.
-
-```python
-class Garden:
-    def __init__(self, owner):
-        self.owner = owner
-
-    class Plant:
-        def __init__(self, outer_instance):
-            self.outer = outer_instance  # store reference to outer instance
-
-        def show_owner(self):
-            print(f"The owner is {self.outer.owner}")
-
-    def create_magic_object(self):
-        self.object_in_class = self.Plant(self)
-        self.object_in_class.show_owner()
-
-object_out_class = Garden("Alice")
-object_out_class.create_magic_object()
-```
-
-**`__dict__` Proof — No Automatic Link:**
-```python
-class Garden:
-    def __init__(self, owner):
-        self.owner = owner
-    class Plant:
-        def __init__(self):
-            pass
-
-g = Garden("Alice")
-p = g.Plant()
-print("Garden object dict:", g.__dict__)   # {'owner': 'Alice'}
-print("Plant object dict:", p.__dict__)    # {}  ← no reference to Garden
-```
-
-**With explicit reference:**
-```python
-class Garden:
-    def __init__(self, owner):
-        self.owner = owner
-    class Plant:
-        def __init__(self, outer):
-            self.outer = outer
-
-g = Garden("Alice")
-p = g.Plant(g)
-print("I know the object where:", p.__dict__)
-# Output: {'outer': <__main__.Garden object at 0x...>}
-```
-
----
-
-## Class Variable & Nested Class
-
-In a **nested class**, the class name is NOT in the global namespace — it only exists within the enclosing class's namespace. Therefore, inside nested class methods, always use `cls` (not the class name directly) to access class variables.
-
-```python
-# ✅ Using cls inside nested class
-class Outer:
-    class Inner:
-        value = 0
-        @classmethod
-        def set_value(cls):
-            cls.value = 100
-
-Outer.Inner.set_value()
-print(Outer.Inner.value)  # 100
-
-# ✅ Using Outer.Inner directly (also works)
-class Outer:
-    class Inner:
-        value = 0
-        @classmethod
-        def set_value(cls):
-            Outer.Inner.value = 100
-
-Outer.Inner.set_value()
-print(Outer.Inner.value)  # 100
-```
-
-```python
-# ❌ Inner.value = 100 inside the method will FAIL
-class Outer:
-    class Inner:
-        value = 0
-        @classmethod
-        def set_value(cls):
-            Inner.value = 100  # NameError — 'Inner' not in global namespace
-```
-
-**For top-level classes, both work:**
-```python
-class A:
-    x = 10
-
-    def set_with_name(self):
-        A.x = 20  # works — A is in global namespace
-
-    @classmethod
-    def set_with_cls(cls):
-        cls.x = 30  # preferred — supports inheritance
-
-A.set_with_cls()
-print(A.x)  # 30
-a = A()
-a.set_with_name()
-print(A.x)  # 20
-```
-
----
-
-## 50 — The Static Method (OOP)
-
-A `@staticmethod` is defined within a class but **not tied to a specific instance or the class itself**. It cannot access `self` or `cls`. Used for utility/helper functions that are independent of class data.
-
-```python
-class Calculator:
-    @staticmethod
-    def add(a, b):
-        return a + b
-
-# Call directly on the class
-print(Calculator.add(5, 3))  # Output: 8
-
-# Also accessible through an instance
-calc = Calculator()
-print(calc.add(7, 2))  # Output: 9
-```
-
----
-
-## 51 — Objects as Arguments (OOP)
-
-You can pass objects as arguments to functions, just like any other data type. You are passing a **reference** to the object.
-
-```python
-class Person:
-    def __init__(self, name):
-        self.name = name
-
-def greet(person):
-    # Accepts a Person object and prints a greeting
-    print(f"Hello, {person.name}!")
-
-person1 = Person("Alice")
-greet(person1)  # Output: Hello, Alice!
-```
-
----
-
-## 52 — Calling a Method Within a Method (OOP)
-
-Invoking one method from inside another method within the same class. Promotes code reuse and the **DRY** (Don't Repeat Yourself) principle.
-
-```python
-class MyClass:
-    def method1A(self):
-        return "Method 1 is called"
-
-    def method1B(self):
-        print(f"call Method 1: {self.method1A()}")  # Calling method1A inside method1B
-
-object = MyClass()
-object.method1B()
-```
-
-**Output:**
-```
-call Method 1: Method 1 is called
-```
-
----
-
-# 45 — Method Overriding / Polymorphism (OOP)
-
-**Method overriding** is when a subclass provides its own implementation for a method already defined in its superclass, maintaining the same method signature.
-
-**Subtype polymorphism** — objects of different subclasses can be used interchangeably through a reference to their common parent type. Python dynamically determines the correct overridden implementation at runtime.
-
-```python
-# Parent class
-class Animal:
-    def __init__(self, name):
-        self.name = name
-
-    def speak(self):
-        return f"{self.name} makes a sound."
-
-# Child class overriding speak()
-class Dog(Animal):
-    def speak(self):
-        return f"{self.name} barks."
-
-dog = Dog("Buddy")
-print(dog.speak())  # Output: Buddy barks.
-```
-
-**Output:**
-```
-Buddy barks.
-```
-
-### Subtype Polymorphism Example
-
-```python
-from abc import ABC, abstractmethod
-
-class Animal(ABC):
-    @abstractmethod
-    def make_sound(self):
-        pass
-
-class Dog(Animal):
-    def make_sound(self):
-        return "Bark"
-
-class Cat(Animal):
-    def make_sound(self):
-        return "Meow"
-
-def animal_sound(animal: Animal):
-    print(f"The animal says: {animal.make_sound()}")
-
-dog = Dog()
-cat = Cat()
-animal_sound(dog)  # The animal says: Bark
-animal_sound(cat)  # The animal says: Meow
-print(dog.make_sound())  # Bark
-```
-
----
-
-# Dunder Methods (Magic Methods)
-
-**Dunder methods** (double underscore methods / magic methods) are predefined methods whose names start and end with `__`. Python calls them automatically in response to built-in operations.
-
-| Method | Triggered By | Purpose |
-|--------|-------------|---------|
-| `__init__(self, ...)` | `ClassName()` | Initialize object |
-| `__str__(self)` | `print()`, `str()` | Human-readable string |
-| `__repr__(self)` | `repr()`, interactive shell | Unambiguous debug string |
-| `__add__(self, other)` | `+` operator | Addition |
-| `__mul__(self, other)` | `*` operator | Multiplication |
-| `__eq__(self, other)` | `==` operator | Equality check |
-| `__len__(self)` | `len()` | Length |
-| `__getitem__(self, key)` | `obj[key]` | Index access |
-| `__call__(self, ...)` | `obj()` | Call object like a function |
-
-```python
-class Demo:
-    def __init__(self, name, values):
-        self.name = name
-        self.values = values
-
-    def __str__(self):
-        return f"Demo object: {self.name}"
-
-    def __repr__(self):
-        return f"Demo(name='{self.name}', values={self.values})"
-
-    def __add__(self, other):
-        return self.name + other.name, self.values + other.values
-
-    def __mul__(self, times):
-        return self.name * times, self.values * times
-
-    def __eq__(self, other):
-        return self.name == other.name and self.values == other.values
-
-    def __len__(self):
-        return len(self.values)
-
-    def __getitem__(self, index):
-        return self.values[index]
-
-    def __call__(self):
-        print(f"Called object: {self.name}")
-
-# Usage
-a = Demo("A", [1, 2, 3])
-b = Demo("B", [4, 5])
-
-print(a)          # Demo object: A         (__str__)
-print(repr(a))    # Demo(name='A', values=[1, 2, 3])  (__repr__)
-c = a + b         # ('AB', [1, 2, 3, 4, 5])  (__add__)
-print(c)
-d = a * 2         # ('AA', [1, 2, 3, 1, 2, 3])  (__mul__)
-print(d)
-print(a == b)     # False  (__eq__)
-print(len(a))     # 3      (__len__)
-print(a[1])       # 2      (__getitem__)
-a()               # Called object: A  (__call__)
-```
-
-**Output:**
-```
-Demo object: A
-Demo(name='A', values=[1, 2, 3])
-('AB', [1, 2, 3, 4, 5])
-('AA', [1, 2, 3, 1, 2, 3])
-False
-3
-2
-Called object: A
-```
-
----
-
-# 54 - The Walrus Operator `:=`
-
-The walrus operator, also known as the **assignment expression operator**, is a feature introduced in Python 3.8. It is represented by the `:=` syntax. The purpose of the walrus operator is to **assign a variable to a value as part of an expression**, typically within control flow statements or when passing arguments to functions.
-
-```python
-#1
-data = [1, 2, 3, 4, 5]
-
-while (n := len(data)) > 0:
-    print(f"List length: {n}")
-    data.pop()
-
-#2
-text = "Hello, World!"
-
-if (length := len(text)) > 10:
-    print(f"The text is long with {length} characters.")
-```
-
-**Output:**
-```
-List length: 5
-List length: 4
-List length: 3
-List length: 2
-List length: 1
-The text is long with 13 characters.
-```
-
----
-
-# 55 - Lambda Functions
-
-Lambda functions in Python, often referred to as **"anonymous functions"**, are small, inline functions that can have any number of parameters but only one expression. They are defined using the `lambda` keyword followed by the parameters, a colon (`:`), then the expression to be evaluated.
-
-**Syntax:** `(lambda parameters : expression)(arguments)`
-
-```python
-add = lambda a, b: a + b
-print(add(5, 3))  # Output: 8
-
-name = lambda first_name, last_name: first_name + " " + last_name
-print(name(first_name="Joe", last_name="Doe"))  # Output: Joe Doe
-
-# Using a lambda function directly without assigning it to a variable
-print((lambda x, y: x + y)(7, 5))  # Output: 12
-
-print((lambda age: True if age < 10 else False)(9))  # Output: True
-```
-
----
-
-# 56 - `sorted()` and `sort()`
-
-- **`sorted(sequence)`** — creates a **new sorted list** without modifying the original; suitable for preserving original order or sorting immutable sequences.
-- **`sequence.sort()`** — sorts **in-place**, only works on lists.
-- Both accept optional parameters: `reverse=True` or `key=` to define a custom sort index.
-
-```python
-#sorted()
-numbers = [3, 1, 4, 1, 5, 9]
-sorted_numbers = sorted(numbers)
-print(sorted_numbers)  # Output: [1, 1, 3, 4, 5, 9]
-
-words = ['apple', 'grape', 'orange']
-print(sorted(words, key=len))  # Output: ['apple', 'grape', 'orange']
-
-sorted_numbers_desc = sorted(numbers, reverse=True)
-print(sorted_numbers_desc)  # Output: [9, 5, 4, 3, 1, 1]
-
-artifacts = [
-	{"name": "Crystal Orb", "power": 85, "type": "orb"},
-	{"name": "Fire Staff", "power": 92, "type": "staff"},
-]
-sorted(artifacts, key=lambda a: a["power"], reverse=True)
-
-#sort()
-numbers = [3, 1, 4, 1, 5, 9]
-numbers.sort()
-print(numbers)  # Output: [1, 1, 3, 4, 5, 9]
-
-words = ['apple', 'grape', 'orange']
-words.sort(key=len)
-print(words)  # Output: ['apple', 'grape', 'orange']
-
-numbers.sort(reverse=True)
-print(numbers)  # Output: [9, 5, 4, 3, 1, 1]
-```
-
-Here is everything combined into one clean script:
-
-```python
-# 1. List
-a = [5, 2, 9, 1]
-b_list = sorted(a)
-
-print("List original:", a)
-print("List sorted:", b_list)
-print()
-
-# 2. Tuple
-t = (4, 1, 7)
-b_tuple = sorted(t)
-
-print("Tuple sorted:", b_tuple)
-print()
-
-# 3. String
-s = "cab"
-b_string = sorted(s)
-
-print("String sorted:", b_string)
-print()
-
-# 4. Set
-st = {10, 3, 7}
-b_set = sorted(st)
-
-print("Set sorted:", b_set)
-print()
-
-# Key idea
-print("Original types unchanged, sorted() always returns a new LIST.")
-```
-
-The exact output will be:
-
-```
-List original: [5, 2, 9, 1]
-List sorted: [1, 2, 5, 9]
-
-Tuple sorted: [1, 4, 7]
-
-String sorted: ['a', 'b', 'c']
-
-Set sorted: [3, 7, 10]
-
-Original types unchanged, sorted() always returns a new LIST.
-```
-
----
-
-# 57 - The `map()` Function
-
-The `map()` function applies a given function to **each item of a sequence** (list, tuple, string) and returns a new sequence with the results.
-
-**Syntax:** `map(function, sequence)`
-
-> Converting the result of `map()` to a list is useful because `map()` returns a **lazy iterator** — it generates values on demand and can only be traversed once. By converting it to a list you can access all results immediately, reuse the data, and use list operations. Avoid for very large datasets.
-
-```python
-def double(x):
-    return x * 2
-
-numbers = [1, 2, 3, 4, 5]
-doubled_numbers = list(map(double, numbers))
-print(doubled_numbers)
-
-#2
-store = [("shirt", 20.00),
-         ("pants", 25.00),
-         ("jacket", 50.00),
-         ("socks", 10.00)]
-
-to_euros = lambda data: (data[0], data[1] * 0.82)
-store_euros = list(map(to_euros, store))
-for i in store_euros:
-    print(i)
-
-#3
-def capitalize_char(char):
-    return char.upper()
-
-string = "hello"
-capitalized_string = list(map(capitalize_char, string))
-print(capitalized_string)
-```
-
-**Output:**
-```
-[2, 4, 6, 8, 10]
-('shirt', 16.4)
-('pants', 20.5)
-('jacket', 41.0)
-('socks', 8.2)
-['H', 'E', 'L', 'L', 'O']
-```
-
----
-
-# 58 - The `filter()` Function
-
-The `filter()` function filters elements of an iterable for which a given function returns `True`.
-
-**Syntax:** `filter(function, iterable)`
-
-> Like `map()`, `filter()` returns a **lazy iterator**. Convert to a list or tuple for repeated access. Avoid for very large datasets.
-
-```python
-#1
-numbers = [10, 20, 33, 41, 50, 62, 70, 85]
-
-ten_base = lambda num: num % 10 == 0
-print(list(filter(ten_base, numbers)))
-
-#2
-chapels = [("Alice", 22), ("Bob", 16), ("Charlie", 25), ("David", 18), ("Emily", 10)]
-
-adult_chapels = filter(lambda x: x[1] >= 18, chapels)
-adult_chapels_list = list(adult_chapels)
-
-print(adult_chapels_list)
-```
-
-**Output:**
-```
-[10, 20, 50, 70]
-[('Alice', 22), ('Charlie', 25), ('David', 18)]
-```
-
----
-
-# 59 - The `reduce()` Function
-
-The `reduce()` function (from `functools`) **repeatedly applies a function** to elements of a sequence, cumulatively reducing it to a single value. It processes two elements at a time: starts with the first two, applies the function, then uses the result with the next element, and so on.
-
-```python
-from functools import reduce
-
-# Example 1: Using reduce() to calculate the product of a list
-numbers = [1, 2, 3, 4]
-product = reduce(lambda x, y: x * y, numbers)
-print("Product of numbers:", product)  # Output: 24
-
-# Example 2: Finding the maximum value in a list
-nums = [10, 20, 5, 40, 15]
-max_num = reduce(lambda x, y: x if x > y else y, nums)
-print("Maximum number:", max_num)  # Output: 40
-
-# Example 3: Using an initializer
-sum_with_initializer = reduce(lambda x, y: x + y, numbers, 10)
-print("Sum with initializer:", sum_with_initializer)  # Output: 20
-
-# Example 4: Define a standalone function
-def multiply(x, y):
-    return x * y
-
-# Use the function with reduce
-result = reduce(multiply, numbers)
-print("Product of numbers:", result)  # Output: 24
-```
-
----
-
-# 60 - The `zip()` Function
-
-The `zip()` function combines **multiple iterables** into a single iterable of tuples. The i-th tuple contains the i-th element from each of the input iterables.
-
-**Syntax:** `zip(iterable1, iterable2, ...)`
-
-> `zip()` returns a **lazy iterator**. Convert to list, tuple, or dict for reuse. Avoid for very large datasets.
-
-```python
-# Two lists to zip
-names = ["Alice", "Bob", "Charlie"]
-scores = [85, 90, 78]
-
-# Zipping the lists together
-zipped = zip(names, scores)
-
-# Convert to a list of tuples
-result = list(zipped)
-print(result)
-
-# Iterating through zipped pairs
-for name, score in zip(names, scores):
-    print(f"{name} scored {score}")
-```
-
-**Output:**
-```
-[('Alice', 85), ('Bob', 90), ('Charlie', 78)]
-Alice scored 85
-Bob scored 90
-Charlie scored 78
-```
-
----
-
-# 61 - List Comprehensions
-
-List comprehensions provide a **concise way to create lists** by applying an expression to each item in an iterable, with optional filtering. Also works on sets.
-
-**Syntax:**
-```
-List = [ expression for item in iterable ]
-List = [ expression for item in iterable if condition ]
-List = [ expression_if_true if condition else expression_if_false for item in iterable ]
-List = [ function(expression) for item in iterable ]
-```
-
-```python
-# Squaring numbers in a range
-squares = [x**2 for x in range(5)]
-print(squares)
-
-# Filtering even numbers
-list = [1,2,3,4,5,6]
-evens = [x for x in list if x % 2 == 0]
-print(evens)
-
-# Categorizing numbers as "Even" or "Odd"
-categories = ["Even" if x % 2 == 0 else "Odd" for x in range(5)]
-print(categories)
-
-# Applying a function to numbers
-def double(x):
-    return x * 2
-
-doubled = [double(x) for x in range(5)]
-print(doubled)
-```
-
-**Output:**
-```
-[0, 1, 4, 9, 16]
-[2, 4, 6]
-['Even', 'Odd', 'Even', 'Odd', 'Even']
-[0, 2, 4, 6, 8]
-```
-
----
-
-# 62 - Tuple Comprehension
-
-Tuple comprehension uses a syntax similar to list comprehensions but **returns a generator object** — pass it to `tuple()` to get the actual tuple.
-
-**Syntax:**
-```
-Tuple = tuple( expression for item in iterable )
-Tuple = tuple( expression for item in iterable if condition )
-Tuple = tuple( expression_if_true if condition else expression_if_false for item in iterable )
-Tuple = tuple( function(expression) for item in iterable )
-```
-
-```python
-# Creating a tuple of squares
-squares = tuple(x**2 for x in range(5))
-print(squares)  # Output: (0, 1, 4, 9, 16)
-
-# Creating a tuple of even numbers
-evens = tuple(x for x in range(10) if x % 2 == 0)
-print(evens)  # Output: (0, 2, 4, 6, 8)
-
-# Categorizing numbers as "Even" or "Odd" in a tuple
-categories = tuple("Even" if x % 2 == 0 else "Odd" for x in range(5))
-print(categories)  # Output: ('Even', 'Odd', 'Even', 'Odd', 'Even')
-
-# Applying a function to numbers and storing results in a tuple
-def double(x):
-    return x * 2
-
-doubled = tuple(double(x) for x in range(5))
-print(doubled)  # Output: (0, 2, 4, 6, 8)
-```
-
----
-
-# 63 - Dictionary Comprehensions
-
-Dictionary comprehensions provide a **concise way to create dictionaries**, optionally filtering items.
-
-**Syntax:**
-```
-dictionary = {key: expression for (key, value) in iterable.items()}
-dictionary = {key: expression for (key, value) in iterable.items() if conditional}
-dictionary = {key: (expr_if_true if condition else expr_if_false) for (key, value) in iterable.items()}
-dictionary = {key: function(value) for (key, value) in iterable.items()}
-```
-
-```python
-# Creating a dictionary with squares of values
-original = {'a': 2, 'b': 3, 'c': 4}
-squared_dict = {key + str(value): value ** 2 for key, value in original.items()}
-print(squared_dict)  # Output: {'a2': 4, 'b3': 9, 'c4': 16}
-
-# Filtering dictionary to include only even values
-filtered_dict = {key: value for key, value in original.items() if value % 2 == 0}
-print(filtered_dict)  # Output: {'a': 2, 'c': 4}
-
-# Categorizing values as "Even" or "Odd"
-categorized_dict = {key: "Even" if value % 2 == 0 else "Odd" for key, value in original.items()}
-print(categorized_dict)  # Output: {'a': 'Even', 'b': 'Odd', 'c': 'Even'}
-
-# Applying a function to values in the dictionary
-def double(x):
-    return x * 2
-
-doubled_dict = {key: double(value) for key, value in original.items()}
-print(doubled_dict)  # Output: {'a': 4, 'b': 6, 'c': 8}
-```
-
----
-
-# 63 - Set Comprehensions
-
-Set comprehensions provide a **concise way to create sets**, similar to list comprehensions. Results are unique (no duplicates).
-
-**Syntax:**
-```
-new_set = {expression for item in iterable}
-new_set = {expression for item in iterable if conditional}
-new_set = {expr_if_true if conditional else expr_if_false for item in iterable}
-new_set = {function(item) for item in iterable}
-```
-
-```python
-# Original iterable
-numbers = [1, 2, 3, 4, 5]
-
-# 1 Basic set comprehension: squares
-squares = {n**2 for n in numbers}
-print("Squares:", squares)
-
-# 2 Set comprehension with condition: only even numbers
-even_squares = {n**2 for n in numbers if n % 2 == 0}
-print("Even squares:", even_squares)
-
-# 3 Conditional expression inside comprehension: label numbers as 'even' or 'odd'
-labels = {"even" if n % 2 == 0 else "odd" for n in numbers}
-print("Labels:", labels)
-
-# 4 Apply a function inside comprehension: convert numbers to strings
-str_numbers = {str(n) for n in numbers}
-print("String numbers:", str_numbers)
-```
-
----
-
-# 64 - `enumerate()`
-
-The `enumerate()` function adds a **counter to an iterable** and returns it as an enumerate object — very useful when you need both the index and the value.
-
-**Syntax:** `enumerate(iterable, start=0)`
-- `iterable` — the sequence to loop through
-- `start` — starting index of the counter (default is `0`)
-
-```python
-fruits = ['apple', 'banana', 'cherry']
-for index, fruit in enumerate(fruits, start=1):
-    print(f"Index {index}: {fruit}")
-
-fruits = ['apple', 'banana', 'cherry']
-indexed_fruits = [(index, fruit) for index, fruit in enumerate(fruits)]
-print(indexed_fruits)
-
-numbers = [10, 20, 30]
-enumerated_numbers = list(enumerate(numbers))
-print(enumerated_numbers)
-```
-
-**Output:**
-```
-Index 1: apple
-Index 2: banana
-Index 3: cherry
-[(0, 'apple'), (1, 'banana'), (2, 'cherry')]
-[(0, 10), (1, 20), (2, 30)]
-```
-
----
-
-# `globals()`
-
-`globals()` is used to **dynamically create global variables** (e.g. `player1`, `player2` …) and assign them values at runtime. Useful for handling multiple related variables without explicitly defining each one.
-
-> ⚠️ This approach reduces code readability and maintainability. A **better alternative** is using **dictionaries or lists** to store dynamically created objects — keeps data organized and avoids polluting the global namespace.
-
-```python
-# Using globals() to create variables from player1 to player4
-for i in range(1, 5):
-    globals()[f"player{i}"] = i * 10
-
-print("From globals():", player1)  # type: ignore
-
-# Using dictionary data structure to create variables from player1 to player4
-player = {f"player{i}": i * 100 for i in range(1, 5)}
-
-print("From dictionary:", player)
-print("From dictionary:", player["player1"])
-```
-
-**Output:**
-```
-From globals(): 10
-From dictionary: 100
-From dictionary: {'player1': 100, 'player2': 200, 'player3': 300, 'player4': 400}
-```
 
 ---
 
